@@ -1,2 +1,15 @@
-
 bin/
+worlds/
+plugins/
+crashdumps/
+players/
+resource_packs/
+banned-ips.txt
+banned-players.txt
+bluelight.properties
+ops.txt
+pocketmine.yml
+server.log
+server.properties
+white-list.txt
+
