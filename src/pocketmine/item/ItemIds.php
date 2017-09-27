@@ -223,8 +223,8 @@ interface ItemIds extends BlockIds{
 	const BEETROOT_SEEDS = 458;
 	const BEETROOT_SOUP = 459;
 	const RAW_SALMON = 460, SALMON = 460;
-	const CLOWNFISH = 461;
-	const PUFFERFISH = 462;
+	const CLOWN_FISH = 461;
+	const PUFFER_FISH = 462;
 	const COOKED_SALMON = 463;
 
 	const APPLEENCHANTED = 466, APPLE_ENCHANTED = 466, ENCHANTED_GOLDEN_APPLE = 466;

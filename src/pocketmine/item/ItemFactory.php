@@ -130,7 +130,7 @@ class ItemFactory{
 			self::registerItem(new FishingRod());
 			self::registerItem(new Clock());
 			self::registerItem(new Item(Item::GLOWSTONE_DUST, 0, "Glowstone Dust"));
-			self::registerItem(new Fish());
+			self::registerItem(new RawFish());
 			self::registerItem(new CookedFish());
 			self::registerItem(new Dye());
 			self::registerItem(new Item(Item::BONE, 0, "Bone"));
@@ -190,21 +190,20 @@ class ItemFactory{
 			//TODO: HOPPER_MINECART
 			self::registerItem(new Item(Item::PRISMARINE_SHARD, 0, "Prismarine Shard"));
 			//TODO: HOPPER
-			//TODO: RABBIT
+			self::registerItem(new RawRabbit());
 			self::registerItem(new CookedRabbit());
-			//TODO: RABBIT_STEW
+			self::registerItem(new RabbitStew());
 			self::registerItem(new Item(Item::RABBIT_FOOT, 0, "Rabbit's Foot"));
-			//TODO: RABBIT_HIDE
-			//TODO: HORSEARMORLEATHER
-			//TODO: HORSEARMORIRON
-			//TODO: GOLD_HORSE_ARMOR
-			//TODO: DIAMOND_HORSE_ARMOR
+			self::registerItem(new Item(Item::RABBIT_HIDE, 0, "Rabbit Hide"));
+			self::registerItem(new HorseArmerLeather());
+			self::registerItem(new HorseArmerIron());
+			self::registerItem(new HorseArmerGold());
+			self::registerItem(new HorseArmerDiamond());
 			//TODO: LEAD
 			//TODO: NAMETAG
 			self::registerItem(new Item(Item::PRISMARINE_CRYSTALS, 0, "Prismarine Crystals"));
-			//TODO: MUTTONRAW
-			//TODO: COOKED_MUTTON
-
+			self::registerItem(new RawMutton());
+			self::registerItem(new CookedMutton());
 			//TODO: END_CRYSTAL
 			//TODO: SPRUCE_DOOR
 			//TODO: BIRCH_DOOR
@@ -230,10 +229,10 @@ class ItemFactory{
 			self::registerItem(new Beetroot());
 			self::registerItem(new BeetrootSeeds());
 			self::registerItem(new BeetrootSoup());
-			//TODO: RAW_SALMON
-			//TODO: CLOWNFISH
-			//TODO: PUFFERFISH
-			//TODO: COOKED_SALMON
+			self::registerItem(new RawSalmon());
+			self::registerItem(new ClownFish());
+			self::registerItem(new PufferFish());
+			self::registerItem(new CookedSalmon());
 
 			self::registerItem(new GoldenAppleEnchanted());
 		}
