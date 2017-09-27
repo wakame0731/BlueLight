@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace pocketmine\block;
 
 use pocketmine\item\Tool;
+use pocketmine\item\Item;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
+use pocketmine\item\ItemFactory;
 
 class CobblestoneWall extends Transparent{
 	const NONE_MOSSY_WALL = 0;
@@ -89,6 +91,16 @@ class CobblestoneWall extends Transparent{
 
 	public function canConnect(Block $block){
 		return ($block->getId() !== self::COBBLESTONE_WALL and $block->getId() !== self::FENCE_GATE) ? $block->isSolid() and !$block->isTransparent() : true;
+	}
+
+	public function getDrops(Item $item) : array{
+		if($item->isPickaxe() >= 1){
+			return [
+				ItemFactory::get(Item::COBBLESTONE_WALL, $this->meta, 1)
+			];
+		}else{
+			return [];
+		}
 	}
 
 }

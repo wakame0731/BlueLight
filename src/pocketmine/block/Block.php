@@ -363,11 +363,43 @@ class Block extends Position implements BlockIds, Metadatable{
 	 *
 	 * @return float
 	 */
-	public function getBreakTime(Item $item) : float{
+	public function getBreakTime(Item $item, Player $player) : float{
 		$base = $this->getHardness() * 1.5;
+		$pos = $player->getPosition();
+		$pos->y += 1;
+		$bid = $player->getLevel()->getBlock($pos)->getId();
+		if(!$player->onGround){
+			$base *= 5;
+		}
+		if($bid === 8 || $bid === 9){
+			$base *= 5;
+		}
 		if($this->canBeBrokenWith($item)){
-			if($this->getToolType() === Tool::TYPE_SHEARS and $item->isShears()){
-				$base /= 15;
+			if($this->getToolType() === Tool::TYPE_SHEARS and (
+				$item->isShears() || 
+				($item->isSword() && $this->getId() === self::COBWEB))
+			){
+				if($tier = $item->isSword()){
+					switch($tier){
+						case Tool::TIER_WOODEN:
+							$base /= 2;
+							break;
+						case Tool::TIER_STONE:
+							$base /= 4;
+						break;
+						case Tool::TIER_IRON:
+							$base /= 6;
+							break;
+						case Tool::TIER_DIAMOND:
+							$base /= 8;
+							break;
+						case Tool::TIER_GOLD:
+							$base /= 12;
+						break;
+					}
+				}else{
+					$base /= 15;
+				}
 			}elseif(
 				($this->getToolType() === Tool::TYPE_PICKAXE and ($tier = $item->isPickaxe()) !== false) or
 				($this->getToolType() === Tool::TYPE_AXE and ($tier = $item->isAxe()) !== false) or
@@ -391,6 +423,29 @@ class Block extends Position implements BlockIds, Metadatable{
 						break;
 				}
 			}
+		}elseif($this->getToolType() === Tool::TYPE_PICKAXE and ($tier = $item->isPickaxe()) !== false){
+			switch($tier){
+				case Tool::TIER_WOODEN:
+					$base /= 2;
+					$base *= 3.33;
+					break;
+				case Tool::TIER_STONE:
+					$base /= 4;
+					$base *= 3.33;
+					break;
+				case Tool::TIER_IRON:
+					$base /= 6;
+					$base *= 3.33;
+					break;
+				case Tool::TIER_DIAMOND:
+					$base /= 8;
+					$base *= 3.33;
+					break;
+				case Tool::TIER_GOLD:
+					$base /= 12;
+					$base *= 3.33;
+					break;
+			}
 		}else{
 			$base *= 3.33;
 		}
@@ -402,8 +457,14 @@ class Block extends Position implements BlockIds, Metadatable{
 		return $base;
 	}
 
-	public function canBeBrokenWith(Item $item) : bool{
-		return $this->getHardness() !== -1;
+	public function canBeBrokenWith(Item $item){
+		if($this->getHardness() === -1){
+			return false;
+		}
+		if($this->getToolType() === Tool::TYPE_NONE || $this->getDrops($item) !== [] || $this instanceof Leaves){
+			return true;
+		}
+		return false;
 	}
 
 	/**

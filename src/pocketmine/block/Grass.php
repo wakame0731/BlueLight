@@ -109,7 +109,7 @@ class Grass extends Solid{
 
 			return true;
 		}elseif($item->isHoe()){
-			$item->useOn($this);
+			$item->useOn($this,2);
 			$this->getLevel()->setBlock($this, BlockFactory::get(Block::FARMLAND));
 
 			return true;

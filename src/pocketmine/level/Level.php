@@ -1648,7 +1648,7 @@ class Level implements ChunkManager, Metadatable{
 				return false;
 			}
 
-			$breakTime = ceil($target->getBreakTime($item) * 20);
+			$breakTime = ceil($target->getBreakTime($item, $player) * 20);
 
 			if($player->isCreative() and $breakTime > 3){
 				$breakTime = 3;

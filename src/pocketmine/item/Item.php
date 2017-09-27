@@ -451,6 +451,27 @@ class Item implements ItemIds, \JsonSerializable{
 	}
 
 	/**
+	 * @param $id
+	 * @return Int level|0(for null)
+	 */
+	 public function getEnchantmentLevel(int $id){
+		if(!$this->hasEnchantments()){
+			return 0;
+		}
+
+		foreach($this->getNamedTag()->ench as $entry){
+			if($entry["id"] === $id){
+				$e = Enchantment::getEnchantment($entry["id"]);
+				$e->setLevel($entry["lvl"]);
+				$E_level = $e->getLevel() > Enchantment::getEnchantMaxLevel($id) ? Enchantment::getEnchantMaxLevel($id) : $e->getLevel();
+				return $E_level;
+			}
+		}
+
+		return 0;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function hasCustomName() : bool{
