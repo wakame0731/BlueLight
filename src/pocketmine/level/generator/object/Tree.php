@@ -45,30 +45,34 @@ abstract class Tree{
 	public $leafBlock = Block::LEAVES;
 	public $treeHeight = 7;
 
-	public static function growTree(ChunkManager $level, int $x, int $y, int $z, Random $random, int $type = 0){
-		switch($type){
-			case Sapling::SPRUCE:
-				$tree = new SpruceTree();
-				break;
-			case Sapling::BIRCH:
-				if($random->nextBoundedInt(39) === 0){
-					$tree = new BirchTree(true);
-				}else{
-					$tree = new BirchTree();
-				}
-				break;
-			case Sapling::JUNGLE:
-				$tree = new JungleTree();
-				break;
-			case Sapling::OAK:
-			default:
-				$tree = new OakTree();
-				/*if($random->nextRange(0, 9) === 0){
-					$tree = new BigTree();
-				}else{*/
+	public static function growTree(ChunkManager $level, int $x, int $y, int $z, Random $random, $type = 0){
+		if(is_array($type)){
+			$tree = new DummyTree($type[0], $type[1], $type[2], $type[2]);
+		}else{
+			switch($type){
+				case Sapling::SPRUCE:
+					$tree = new SpruceTree();
+					break;
+				case Sapling::BIRCH:
+					if($random->nextBoundedInt(39) === 0){
+						$tree = new BirchTree(true);
+					}else{
+						$tree = new BirchTree();
+					}
+					break;
+				case Sapling::JUNGLE:
+					$tree = new JungleTree();
+					break;
+				case Sapling::OAK:
+				default:
+					$tree = new OakTree();
+					/*if($random->nextRange(0, 9) === 0){
+						$tree = new BigTree();
+					}else{*/
 
-				//}
-				break;
+					//}
+					break;
+			}
 		}
 		if($tree->canPlaceObject($level, $x, $y, $z, $random)){
 			$tree->placeObject($level, $x, $y, $z, $random);

@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ *  ____            _        _   __  __ _                  __  __ ____  
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,31 +15,32 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- *
+ * 
  *
 */
-
-declare(strict_types=1);
 
 namespace pocketmine\level\generator\populator;
 
 use pocketmine\block\Block;
-use pocketmine\block\Sapling;
+use pocketmine\block\Liquid;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\object\Tree as ObjectTree;
+use pocketmine\level\generator\object\Honeycomb as ObjectHoney;
 use pocketmine\utils\Random;
 
-class Tree extends Populator{
+class Honeycomb extends Populator{
 	/** @var ChunkManager */
 	private $level;
 	private $randomAmount;
 	private $baseAmount;
 
-	private $type;
+	private $id;
+	private $data;
 
-	public function __construct($type = Sapling::OAK){
-		$this->type = $type;
-	}
+	public $disable = [
+		Block::AIR => true,
+		Block::EMERALD_BLOCK => true,
+		Block::YELLOW_GLAZED_TERRACOTTA => true
+	];
 
 	public function setRandomAmount($amount){
 		$this->randomAmount = $amount;
@@ -59,20 +60,27 @@ class Tree extends Populator{
 			if($y === -1){
 				continue;
 			}
-			ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
+			//ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
+			//$log, $leaves, $leafType, $type, $treeHeight = 8
+			$comb = new ObjectHoney();
+			if($comb->canPlaceObject($level, $x, $y, $z)){
+				$comb->placeObject($level, $x, $y, $z);
+			}
 		}
 	}
 
 	private function getHighestWorkableBlock($x, $z){
 		for($y = 127; $y > 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
-			if($b === Block::DIRT or $b === Block::GRASS or $b === Block::CONCRETE_POWDER){
+			$b2 = $this->level->getBlockIdAt($x, $y+1, $z);
+			$bl = Block::get($b2);
+			if($b === 0 && $bl->isSolid() && !isset($this->disable[$b2])){
 				break;
-			}elseif($b !== 0 and $b !== Block::SNOW_LAYER){
+			}elseif($y < 50){//under waterHeight
 				return -1;
 			}
 		}
 
-		return ++$y;
+		return $y;
 	}
 }

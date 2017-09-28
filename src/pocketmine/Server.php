@@ -58,10 +58,12 @@ use pocketmine\level\format\io\region\Anvil;
 use pocketmine\level\format\io\region\McRegion;
 use pocketmine\level\format\io\region\PMAnvil;
 use pocketmine\level\generator\biome\Biome;
+use pocketmine\level\generator\normal\eardbiome\Biome as EardBiome;
 use pocketmine\level\generator\Flat;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\generator\hell\Nether;
 use pocketmine\level\generator\normal\Normal;
+use pocketmine\level\generator\normal\Eard;
 use pocketmine\level\Level;
 use pocketmine\level\LevelException;
 use pocketmine\metadata\EntityMetadataStore;
@@ -1676,6 +1678,8 @@ class Server{
 			Enchantment::init();
 			ItemFactory::init();
 			Biome::init();
+			EardBiome::init();
+
 			Effect::init();
 			Attribute::init();
 			$this->craftingManager = new CraftingManager();
@@ -1713,6 +1717,7 @@ class Server{
 
 			Generator::addGenerator(Flat::class, "flat");
 			Generator::addGenerator(Normal::class, "normal");
+			Generator::addGenerator(Eard::class, "eard");
 			Generator::addGenerator(Normal::class, "default");
 			Generator::addGenerator(Nether::class, "hell");
 			Generator::addGenerator(Nether::class, "nether");

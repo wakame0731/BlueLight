@@ -29,7 +29,7 @@ interface BlockIds{
 	const STONE = 1;
 	const GRASS = 2;
 	const DIRT = 3;
-	const COBBLESTONE = 4;
+	const COBBLESTONE = 4; const COBBLE = 4;
 	const PLANKS = 5, WOODEN_PLANKS = 5;
 	const SAPLING = 6;
 	const BEDROCK = 7;

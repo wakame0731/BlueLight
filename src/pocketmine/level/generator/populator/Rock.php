@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ *  ____            _        _   __  __ _                  __  __ ____  
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,30 +15,33 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- *
+ * 
  *
 */
-
-declare(strict_types=1);
 
 namespace pocketmine\level\generator\populator;
 
 use pocketmine\block\Block;
-use pocketmine\block\Sapling;
+use pocketmine\block\Liquid;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\object\Tree as ObjectTree;
+use pocketmine\level\generator\object\Rock as ObjectRock;
 use pocketmine\utils\Random;
 
-class Tree extends Populator{
+class Rock extends Populator{
 	/** @var ChunkManager */
 	private $level;
 	private $randomAmount;
 	private $baseAmount;
 
-	private $type;
+	private $id;
+	private $data;
 
-	public function __construct($type = Sapling::OAK){
-		$this->type = $type;
+	public function __construct($id = Block::STONE, $data = 0, $min = 4, $max = 6, $onLiquid = false){
+		$this->id = $id;
+		$this->data = $data;
+		$this->min = $min;
+		$this->max = $max;
+		$this->onLiquid = $onLiquid;
 	}
 
 	public function setRandomAmount($amount){
@@ -59,14 +62,18 @@ class Tree extends Populator{
 			if($y === -1){
 				continue;
 			}
-			ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
+			//ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
+			//$log, $leaves, $leafType, $type, $treeHeight = 8
+			$rock = new ObjectRock($this->id, $this->data, mt_rand($this->min, $this->max)*3);
+			$rock->placeObject($this->level, $x, $y, $z);
 		}
 	}
 
 	private function getHighestWorkableBlock($x, $z){
 		for($y = 127; $y > 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
-			if($b === Block::DIRT or $b === Block::GRASS or $b === Block::CONCRETE_POWDER){
+			$bl = Block::get($b);
+			if(((!$this->onLiquid && $bl->isSolid()) || ($this->onLiquid && $bl instanceof Liquid)) && ($b !== Block::LEAVES && $b !== Block::LEAVES2 && $b !== Block::COBBLE && $b !== 159 && $b !== 99 && $b !== 100)){
 				break;
 			}elseif($b !== 0 and $b !== Block::SNOW_LAYER){
 				return -1;

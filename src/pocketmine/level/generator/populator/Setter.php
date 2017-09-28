@@ -23,22 +23,23 @@ declare(strict_types=1);
 
 namespace pocketmine\level\generator\populator;
 
+use pocketmine\math\Vector3;
 use pocketmine\block\Block;
-use pocketmine\block\Sapling;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\object\Tree as ObjectTree;
 use pocketmine\utils\Random;
 
-class Tree extends Populator{
+class Setter extends Populator{
 	/** @var ChunkManager */
 	private $level;
 	private $randomAmount;
 	private $baseAmount;
 
-	private $type;
+	public $block_id = 0;
+	public $block_data = 0;	
 
-	public function __construct($type = Sapling::OAK){
-		$this->type = $type;
+	public function __construct($id, $data = 0){
+		$this->block_id = $id;
+		$this->block_data = $data;
 	}
 
 	public function setRandomAmount($amount){
@@ -53,26 +54,38 @@ class Tree extends Populator{
 		$this->level = $level;
 		$amount = $random->nextRange(0, $this->randomAmount + 1) + $this->baseAmount;
 		for($i = 0; $i < $amount; ++$i){
-			$x = $random->nextRange($chunkX << 4, ($chunkX << 4) + 15);
-			$z = $random->nextRange($chunkZ << 4, ($chunkZ << 4) + 15);
+			$x = $random->nextRange($chunkX * 16, $chunkX * 16 + 15);
+			$z = $random->nextRange($chunkZ * 16, $chunkZ * 16 + 15);
 			$y = $this->getHighestWorkableBlock($x, $z);
-			if($y === -1){
-				continue;
+
+			if($y !== -1 and $this->canStay($x, $y, $z)){
+				if(is_array($this->block_id)){
+					foreach($this->block_id as $key => $array) {
+						list($xx, $yy, $zz, $id, $data) = $array;
+						$this->level->setBlockIdAt($x+$xx, $y+$yy, $z+$zz, $id);
+						$this->level->setBlockDataAt($x+$xx, $y+$yy, $z+$zz, $data);
+					}
+				}else{
+					$this->level->setBlockIdAt($x, $y, $z, $this->block_id);
+					$this->level->setBlockDataAt($x, $y, $z, $this->block_data);
+				}
 			}
-			ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
 		}
 	}
 
+	private function canStay($x, $y, $z){
+		$b = $this->level->getBlockIdAt($x, $y, $z);
+		return ($b === Block::AIR or $b === Block::SNOW_LAYER) and (Block::get($this->level->getBlockIdAt($x, $y - 1, $z))->isSolid() || !is_array($this->block_data) or isset($this->block_data[$this->level->getBlockIdAt($x, $y - 1, $z)]));
+	}
+
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y > 0; --$y){
+		for($y = 127; $y >= 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
-			if($b === Block::DIRT or $b === Block::GRASS or $b === Block::CONCRETE_POWDER){
+			if(!is_array($this->block_data) or isset($this->block_data[$b])){
 				break;
-			}elseif($b !== 0 and $b !== Block::SNOW_LAYER){
-				return -1;
 			}
 		}
 
-		return ++$y;
+		return $y === 0 ? -1 : ++$y;
 	}
 }
