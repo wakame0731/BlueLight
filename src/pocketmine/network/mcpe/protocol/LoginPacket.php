@@ -51,6 +51,15 @@ class LoginPacket extends DataPacket{
 	public $skinId;
 	/** @var string */
 	public $skin = "";
+	/** @var string */
+	public $skinGeometryName = "";
+	/** @var string */
+	public $skinGeometryData = "";
+	/** @var string */
+	public $capeData = "";
+
+	/** @var string */
+	public $languageCode = 'unknown';
 
 	/** @var array (the "chain" index contains one or more JWTs) */
 	public $chainData = [];
@@ -99,6 +108,18 @@ class LoginPacket extends DataPacket{
 		if(isset($this->clientData["SkinData"])){
 			$this->skin = base64_decode($this->clientData["SkinData"]);
 		}
+		if (isset($this->clientData['SkinGeometryName'])) {
+            $this->skinGeometryName = $this->clientData['SkinGeometryName'];    
+        }
+		if (isset($this->clientData['SkinGeometry'])) {
+            $this->skinGeometryData = base64_decode($this->clientData['SkinGeometry']);  
+		}
+		if (isset($this->clientData['LanguageCode'])) {
+            $this->languageCode = $this->clientData['LanguageCode'];
+		}
+		if (isset($this->clientData['CapeData'])) {
+            $this->capeData = base64_decode($this->clientData['CapeData']);
+        }
 	}
 
 	protected function encodePayload(){
