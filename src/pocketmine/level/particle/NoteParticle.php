@@ -36,9 +36,7 @@ class NoteParticle extends GenericParticle{
 
 	public function encode(){
 		$pk = new BlockEventPacket();
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
+		$pk->position = $this->asVector3();
 		$pk->case1 = $this->instrument;
 		$pk->case2 = $this->pitch;
 
