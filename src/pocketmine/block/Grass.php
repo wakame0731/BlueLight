@@ -32,6 +32,7 @@ use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\utils\Random;
+use pocketmine\level\sound\BlockPlaceSound;
 
 class Grass extends Solid{
 
@@ -111,7 +112,7 @@ class Grass extends Solid{
 		}elseif($item->isHoe()){
 			$item->useOn($this,2);
 			$this->getLevel()->setBlock($this, BlockFactory::get(Block::FARMLAND));
-
+			$this->getLevel()->addSound(new BlockPlaceSound($this));
 			return true;
 		}elseif($item->isShovel() and $this->getSide(Vector3::SIDE_UP)->getId() === Block::AIR){
 			$item->useOn($this);

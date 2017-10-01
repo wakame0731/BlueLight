@@ -26,6 +26,8 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\Player;
+use pocketmine\level\Level;
+use pocketmine\level\sound\BlockPlaceSound;
 
 class Dirt extends Solid{
 
@@ -44,13 +46,22 @@ class Dirt extends Solid{
 	}
 
 	public function getName() : string{
+		if($this->meta === 1){
+			return "Coarse Dirt";
+		}
 		return "Dirt";
 	}
 
 	public function onActivate(Item $item, Player $player = null) : bool{
 		if($item->isHoe()){
 			$item->useOn($this,2);
-			$this->getLevel()->setBlock($this, BlockFactory::get(Block::FARMLAND, 0), true);
+			if($this->meta === 1){
+				$this->getLevel()->setBlock($this, BlockFactory::get(Block::DIRT), true);
+				$this->getLevel()->addSound(new BlockPlaceSound($this));
+			}else{
+				$this->getLevel()->setBlock($this, BlockFactory::get(Block::FARMLAND), true);
+				$this->getLevel()->addSound(new BlockPlaceSound($this));
+			}
 
 			return true;
 		}
