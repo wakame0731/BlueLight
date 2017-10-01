@@ -76,17 +76,13 @@ class NoteblockSound extends GenericSound{
 
 	public function encode(){
 		$pk = new BlockEventPacket();
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
+		$pk->position = $this->asVector3();
 		$pk->case1 = $this->instrument;
 		$pk->case2 = $this->pitch;
 
 		$pk2 = new LevelSoundEventPacket();
 		$pk2->sound = LevelSoundEventPacket::SOUND_NOTE;
-		$pk2->x = $this->x;
-		$pk2->y = $this->y;
-		$pk2->z = $this->z;
+		$pk2->position = $this->asVector3();
 		$pk2->pitch = $this->pitch;
 
 		return array($pk,$pk2);
