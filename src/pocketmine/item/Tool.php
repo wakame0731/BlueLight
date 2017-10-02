@@ -112,7 +112,8 @@ abstract class Tool extends Item{
 			Tool::TIER_WOODEN => 60,
 			Tool::TIER_STONE => 132,
 			Tool::TIER_IRON => 251,
-			Tool::TIER_DIAMOND => 1562
+			Tool::TIER_DIAMOND => 1562,
+			self::FISHING_ROD => 390
 		];
 
 		if(($type = $this->isPickaxe()) === false){
@@ -120,7 +121,7 @@ abstract class Tool extends Item{
 				if(($type = $this->isSword()) === false){
 					if(($type = $this->isShovel()) === false){
 						if(($type = $this->isHoe()) === false){
-							return false;
+							$type = $this->id;
 						}
 					}
 				}

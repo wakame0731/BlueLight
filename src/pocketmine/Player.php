@@ -32,6 +32,7 @@ use pocketmine\entity\Arrow;
 use pocketmine\entity\Boat;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
+use pocketmine\entity\FishingHook;
 use pocketmine\entity\Human;
 use pocketmine\entity\Item as DroppedItem;
 use pocketmine\entity\Living;
@@ -335,38 +336,29 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 
 	/**
-	 * Systems quoted from Genisys.
+	 * @param FishingHook $entity
+	 *
+	 * @return bool
 	 */
-	public function linkHookToPlayer(FishingHook $entity){
-		if($entity->isAlive()){
-			$this->setFishingHook($entity);
+	public function linkHookToPlayer($entity){
+		$this->setFishingHook($entity);
+		if($entity !== null && $entity->isAlive()){
 			$pk = new EntityEventPacket();
-			$pk->eid = $this->getFishingHook()->getId();
+			$pk->entityRuntimeId = $this->getFishingHook()->getId();
 			$pk->event = EntityEventPacket::FISH_HOOK_POSITION;
-			$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-
-			$pk = new EntityEventPacket();
-			$pk->eid = $this->getFishingHook()->getId();
-			$pk->event = EntityEventPacket::FISH_HOOK_BUBBLE;
-			$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-
-			$pk = new EntityEventPacket();
-			$pk->eid = $this->getFishingHook()->getId();
-			$pk->event = EntityEventPacket::FISH_HOOK_HOOK;
-			$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-			$pk = new EntityEventPacket();
-			$pk->eid = $this->getFishingHook()->getId();
-			$pk->event = EntityEventPacket::FISH_HOOK_TEASE;
 			$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function unlinkHookFromPlayer(){
 		if($this->fishingHook instanceof FishingHook){
 			$pk = new EntityEventPacket();
-			$pk->eid = $this->fishingHook->getId();
+			$pk->entityRuntimeId = $this->fishingHook->getId();
 			$pk->event = EntityEventPacket::FISH_HOOK_TEASE;
 			$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 			$this->setFishingHook();
@@ -375,14 +367,23 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		return false;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isFishing(){
 		return ($this->fishingHook instanceof FishingHook);
 	}
 
+	/**
+	 * @return FishingHook
+	 */
 	public function getFishingHook(){
 		return $this->fishingHook;
 	}
 
+	/**
+	 * @param FishingHook|null $entity
+	 */
 	public function setFishingHook(FishingHook $entity = null){
 		if($entity == null and $this->fishingHook instanceof FishingHook){
 			$this->fishingHook->close();
@@ -1676,6 +1677,12 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 							$this->exhaust(0.1 * $distance, PlayerExhaustEvent::CAUSE_SPRINTING);
 						}else{
 							$this->exhaust(0.01 * $distance, PlayerExhaustEvent::CAUSE_WALKING);
+						}
+					}
+	
+					if($this->fishingHook instanceof FishingHook){
+						if($this->distance($this->fishingHook) > 33 or $this->inventory->getItemInHand()->getId() !== Item::FISHING_ROD){
+							$this->setFishingHook();
 						}
 					}
 				}
