@@ -25,6 +25,7 @@ use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\Network;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\Player;
 
 class EnderPearl extends Projectile{
@@ -41,6 +42,7 @@ class EnderPearl extends Projectile{
 
 	public function __construct(Level $level, CompoundTag $nbt, Entity $shootingEntity = null){
 		parent::__construct($level, $nbt, $shootingEntity);
+		if($shootingEntity instanceof Player) $this->setSpawner($shootingEntity);
 	}
 
 	public function onUpdate(int $currentTick) : bool{
@@ -71,12 +73,15 @@ class EnderPearl extends Projectile{
 		$this->player = $player;
 	}
 
-	public function close(){
+	public function kill(){
 		if($this->getSpawner() instanceof Player){
 			$this->getSpawner()->teleport($this);
+			if($this->getSpawner()->isSurvival()){
+				$this->getSpawner()->attack(new EntityDamageEvent($this->getSpawner(), EntityDamageEvent::CAUSE_FALL, 5));
+			}
 		}
 
-		parent::close();
+		parent::kill();
 	}
 
 	public function spawnTo(Player $player){

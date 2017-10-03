@@ -114,6 +114,8 @@ class ItemFactory{
 			self::registerItem(new IronDoor());
 			self::registerItem(new Redstone());
 			self::registerItem(new Snowball());
+			self::registerItem(new EnderPearl());
+			self::registerItem(new EnderEye());
 			self::registerItem(new Boat());
 			self::registerItem(new Item(Item::LEATHER, 0, "Leather"));
 
