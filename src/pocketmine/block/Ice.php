@@ -27,6 +27,7 @@ use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\Player;
+use pocketmine\item\ItemFactory;
 
 class Ice extends Transparent{
 
@@ -76,6 +77,6 @@ class Ice extends Transparent{
 	}
 
 	public function getDrops(Item $item) : array{
-		return [];
+		return [ItemFactory::get(Item::AIR, 0, 1)];
 	}
 }

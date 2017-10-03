@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace pocketmine\block;
 
 use pocketmine\item\Tool;
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 
 class PackedIce extends Solid{
 
@@ -45,8 +47,8 @@ class PackedIce extends Solid{
 		return 0.98;
 	}
 
-	public function getToolType() : int{
-		return Tool::TYPE_PICKAXE;
+	public function getDrops(Item $item) : array{
+		return [ItemFactory::get(Item::AIR, 0, 1)];
 	}
 
 }
