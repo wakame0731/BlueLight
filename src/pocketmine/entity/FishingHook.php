@@ -109,16 +109,16 @@ class FishingHook extends Projectile{
 		$this->timings->startTiming();
 		$hasUpdate = parent::onUpdate($currentTick);
 		if($this->level === null){
-			$this->getOwningEntity()->linkHookToPlayer();
+			//$this->getOwningEntity()->linkHookToPlayer();
 			$this->close();
 			return false;
 		}
 		if($this->isInsideOfWater()){
-			$this->motionX *= 8/9;
-			$this->motionY += 0.075+$this->gravity;
-			$this->motionZ *= 8/9;
-			if($this->motionY > 0.15){
-				$this->motionY = 0.15;
+			$this->motionX *= 2/3;
+			$this->motionY += 0.15+$this->gravity;
+			$this->motionZ *= 2/3;
+			if($this->motionY > 0.2){
+				$this->motionY = 0.2;
 			}
 			if($this->isInsideOfSurface() && $this->motionY >= 0){
 				$this->motionY = $this->gravity;
