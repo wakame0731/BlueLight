@@ -232,6 +232,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 				if($food > 0){
 					$food--;
 					$this->setFood($food);
+					$this->setSaturation(7);
 				}
 			}
 		}
