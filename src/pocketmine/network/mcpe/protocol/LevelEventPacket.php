@@ -76,6 +76,7 @@ class LevelEventPacket extends DataPacket{
 	const EVENT_PARTICLE_SPLASH = 2002;
 	const EVENT_PARTICLE_EYE_DESPAWN = 2003;
 	const EVENT_PARTICLE_SPAWN = 2004;
+	const EVENT_PARTICLE_BONEMEAL = 2005;
 
 	const EVENT_GUARDIAN_CURSE = 2006;
 

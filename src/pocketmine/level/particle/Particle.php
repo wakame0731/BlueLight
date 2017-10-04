@@ -69,9 +69,9 @@ abstract class Particle extends Vector3{
 	//39 unknown
 	const TYPE_END_ROD = 40;
 	const TYPE_DRAGONS_BREATH = 41;
-	#const TYPE_FIREWORKS_STARTER = 45;//花火の白いやつ？
-	#const TYPE_FIREWORKS_SPARK = 46;//花火本体
-	#const TYPE_FIREWORKS_OVERLAY = 47;//花火のオーバーレイ
+	const TYPE_FIREWORKS_STARTER = 45;//出なかった
+	const TYPE_FIREWORKS_SPARK = 46;//花火本体
+	const TYPE_FIREWORKS_OVERLAY = 47;//花火のオーバーレイ
 	
 	/**
 	 * @return DataPacket|DataPacket[]
