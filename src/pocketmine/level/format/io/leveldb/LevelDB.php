@@ -70,6 +70,7 @@ class LevelDB extends BaseLevelProvider{
 	const GENERATOR_INFINITE = 1;
 	const GENERATOR_FLAT = 2;
 	const GENERATOR_EARD = 3;
+	const GENERATOR_EARD_LIVING = 4;
 
 	const CURRENT_STORAGE_VERSION = 5; //Current MCPE level format version
 	const CURRENT_LEVEL_CHUNK_VERSION = 4;

@@ -13,7 +13,7 @@ class BeachBiome extends SandyBiome{
 		$this->removePopulator(Cactus::class);
 		$this->removePopulator(DeadBush::class);
 		
-		$this->setElevation(25, 52);
+		$this->setElevation(62, 67);
 	}
 
 	public function getName() : string{

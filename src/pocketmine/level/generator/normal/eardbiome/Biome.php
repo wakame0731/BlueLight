@@ -110,6 +110,7 @@ abstract class Biome{
 	public static function init(){
 		self::register(self::END, new Aether());
 		self::register(self::OCEAN, new OceanBiome());
+		self::register(self::BEACH, new BeachBiome());
 		self::register(self::PLAINS, new PlainBiome());
 		self::register(self::DESERT, new DesertBiome());
 		self::register(self::MOUNTAINS, new MountainsBiome());
@@ -123,7 +124,7 @@ abstract class Biome{
 
 		self::register(self::SMALL_MOUNTAINS, new SmallMountainsBiome());
 
-		self::register(self::BIRCH_FOREST, new ForestBiome(ForestBiome::TYPE_BIRCH));
+		self::register(self::BIRCH_FOREST, new PlainBiome2());
 	}
 
 	/**

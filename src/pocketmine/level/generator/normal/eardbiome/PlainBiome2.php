@@ -39,7 +39,13 @@ class PlainBiome2 extends GrassyBiome{
 
 	public function __construct(){
 		parent::__construct();
-
+		$this->setGroundCover([
+			Block::get(Block::GRASS, 0),
+			Block::get(Block::DIRT, 0),
+			Block::get(Block::DIRT, 0),
+			Block::get(Block::DIRT, 0),
+			Block::get(Block::DIRT, 0),
+		]);
 		$sugarcane = new Sugarcane();
 		$sugarcane->setBaseAmount(6);
 		$tallGrass = new TallGrass();
