@@ -26,8 +26,13 @@ namespace pocketmine\item;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 
-class WoodenDoor extends Item{
+class BirchDoor extends Item{
 	public function __construct(int $meta = 0){
-		$this->block = BlockFactory::get(Block::WOODEN_DOOR_BLOCK);
-		parent::__construct(self::WOODEN_DOOR, $meta, "Oak Door");
-	}}
+		$this->block = BlockFactory::get(Block::BIRCH_DOOR_BLOCK);
+		parent::__construct(self::BIRCH_DOOR, $meta, "Acacia Door");
+	}
+
+	public function getMaxStackSize() : int{
+		return 1;
+	}
+}

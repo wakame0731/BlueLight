@@ -207,11 +207,11 @@ class ItemFactory{
 			self::registerItem(new RawMutton());
 			self::registerItem(new CookedMutton());
 			//TODO: END_CRYSTAL
-			//TODO: SPRUCE_DOOR
-			//TODO: BIRCH_DOOR
-			//TODO: JUNGLE_DOOR
-			//TODO: ACACIA_DOOR
-			//TODO: DARK_OAK_DOOR
+			self::registerItem(new SpruceDoor());
+			self::registerItem(new BirchDoor());
+			self::registerItem(new JungleDoor());
+			self::registerItem(new AcaciaDoor());
+			self::registerItem(new DarkOakDoor());
 			//TODO: CHORUS_FRUIT
 			self::registerItem(new Item(Item::CHORUS_FRUIT_POPPED, 0, "Popped Chorus Fruit"));
 
