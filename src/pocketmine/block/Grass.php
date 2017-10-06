@@ -115,7 +115,7 @@ class Grass extends Solid{
 			$this->getLevel()->addSound(new BlockPlaceSound($this));
 			return true;
 		}elseif($item->isShovel() and $this->getSide(Vector3::SIDE_UP)->getId() === Block::AIR){
-			$item->useOn($this);
+			$item->useOn($this,2);
 			$this->getLevel()->setBlock($this, BlockFactory::get(Block::GRASS_PATH));
 
 			return true;
