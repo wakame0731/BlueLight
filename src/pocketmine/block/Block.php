@@ -39,6 +39,7 @@ use pocketmine\metadata\Metadatable;
 use pocketmine\metadata\MetadataValue;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\entity\Effect;
 
 class Block extends Position implements BlockIds, Metadatable{
 
@@ -452,6 +453,11 @@ class Block extends Position implements BlockIds, Metadatable{
 
 		if($item->isSword()){
 			$base *= 0.5;
+		}
+		
+		if($player->hasEffect(Effect::HASTE)){
+			$ef=$player->getEffect(Effect::HASTE);
+			$base *=1.0+$ef->getEffectLevel()*0.2;
 		}
 
 		return $base;
