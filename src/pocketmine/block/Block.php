@@ -456,8 +456,8 @@ class Block extends Position implements BlockIds, Metadatable{
 		}
 		
 		if($player->hasEffect(Effect::HASTE)){
-			$ef=$player->getEffect(Effect::HASTE);
-			$base *=1.0+$ef->getEffectLevel()*0.2;
+			$ef = $player->getEffect(Effect::HASTE);
+			$base *= 1.0-$ef->getEffectLevel()*0.2;
 		}
 
 		return $base;
