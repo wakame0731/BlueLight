@@ -320,7 +320,10 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		if(isset($this->namedtag->Skin) and $this->namedtag->Skin instanceof CompoundTag){
 			$this->setSkin(new Skin(
 				$this->namedtag->Skin["Name"],
-				$this->namedtag->Skin["Data"]
+				$this->namedtag->Skin["Data"],
+				$this->namedtag->Skin["capeData"],
+				$this->namedtag->Skin["geometryName"],
+				$this->namedtag->Skin["geometryData"]
 			));
 		}
 
