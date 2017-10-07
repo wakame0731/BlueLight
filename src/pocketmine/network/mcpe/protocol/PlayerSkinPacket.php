@@ -52,6 +52,7 @@ class PlayerSkinPacket extends DataPacket{
 		$capeData = $this->getString();
 		$geometryModel = $this->getString();
 		$geometryData = $this->getString();
+		//file_put_contents ("Texture.json",($geometryData = $this->getString()));
 
 		$this->skin = new Skin($skinId, $skinData, $capeData, $geometryModel, $geometryData);
 	}
