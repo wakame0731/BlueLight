@@ -663,4 +663,17 @@ class Block extends Position implements BlockIds, Metadatable{
 			$this->getLevel()->getBlockMetadata()->removeMetadata($this, $metadataKey, $owningPlugin);
 		}
 	}
+
+	public function canBePlacedAt(Block $blockReplace, Vector3 $clickVector) : bool{
+		return $blockReplace->canBeReplaced();
+	}
+
+		/**
+	 * Returns the block meta, stripped of non-variant flags.
+	 * @return int
+	 */
+	public function getVariant() : int{
+		return $this->meta & $this->getVariantBitmask();
+	}
+	
 }

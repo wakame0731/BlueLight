@@ -137,4 +137,17 @@ class WoodenSlab extends Transparent{
 	public function getFuelTime() : int{
 		return 300;
 	}
+
+	public function canBePlacedAt(Block $blockReplace, Vector3 $clickVector) : bool{
+		return parent::canBePlacedAt($blockReplace, $clickVector) or
+			(
+				$blockReplace->getId() === $this->getId() and
+				$blockReplace->getVariant() === $this->getVariant() and
+				(
+					(($blockReplace->getDamage() & 0x08) !== 0 and ($clickVector->y <= 0.5 or $clickVector->y === 1.0)) or //top slab, fill bottom half
+					(($blockReplace->getDamage() & 0x08) === 0 and ($clickVector->y >= 0.5 or $clickVector->y === 0.0)) //bottom slab, fill top half
+				)
+			);
+	}
+
 }
