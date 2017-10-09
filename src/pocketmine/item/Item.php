@@ -246,19 +246,12 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return bool
 	 */
 	public function hasCustomBlockData() : bool{
-		if(!$this->hasCompoundTag()){
-			return false;
-		}
-
 		$tag = $this->getNamedTag();
 
 		return isset($tag->BlockEntityTag) and $tag->BlockEntityTag instanceof CompoundTag;
 	}
 
 	public function clearCustomBlockData(){
-		if(!$this->hasCompoundTag()){
-			return $this;
-		}
 		$tag = $this->getNamedTag();
 
 		if(isset($tag->BlockEntityTag) and $tag->BlockEntityTag instanceof CompoundTag){
@@ -277,13 +270,7 @@ class Item implements ItemIds, \JsonSerializable{
 	public function setCustomBlockData(CompoundTag $compound){
 		$tags = clone $compound;
 		$tags->setName("BlockEntityTag");
-
-		if(!$this->hasCompoundTag()){
-			$tag = new CompoundTag("", []);
-		}else{
-			$tag = $this->getNamedTag();
-		}
-
+		$tag = $this->getNamedTag();
 		$tag->BlockEntityTag = $tags;
 		$this->setNamedTag($tag);
 
@@ -294,10 +281,6 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return CompoundTag|null
 	 */
 	public function getCustomBlockData(){
-		if(!$this->hasCompoundTag()){
-			return null;
-		}
-
 		$tag = $this->getNamedTag();
 		if(isset($tag->BlockEntityTag) and $tag->BlockEntityTag instanceof CompoundTag){
 			return $tag->BlockEntityTag;
@@ -310,10 +293,6 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return bool
 	 */
 	public function hasEnchantments() : bool{
-		if(!$this->hasCompoundTag()){
-			return false;
-		}
-
 		$tag = $this->getNamedTag();
 
 		return isset($tag->ench) and $tag->ench instanceof ListTag;
@@ -397,17 +376,11 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @param Enchantment $ench
 	 */
 	public function addEnchantment(Enchantment $ench){
-		if(!$this->hasCompoundTag()){
-			$tag = new CompoundTag("", []);
-		}else{
-			$tag = $this->getNamedTag();
-		}
-
+		$tag = $this->getNamedTag();
 		$found = false;
 
 		if(!isset($tag->ench)){
-			$tag->ench = new ListTag("ench", []);
-			$tag->ench->setTagType(NBT::TAG_Compound);
+			$tag->ench = new ListTag("ench", [], NBT::TAG_Compound);
 		}else{
 			foreach($tag->ench as $k => $entry){
 				if($entry["id"] === $ench->getId()){
@@ -475,10 +448,6 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return bool
 	 */
 	public function hasCustomName() : bool{
-		if(!$this->hasCompoundTag()){
-			return false;
-		}
-
 		$tag = $this->getNamedTag();
 		if(isset($tag->display)){
 			$tag = $tag->display;
@@ -494,10 +463,6 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return string
 	 */
 	public function getCustomName() : string{
-		if(!$this->hasCompoundTag()){
-			return "";
-		}
-
 		$tag = $this->getNamedTag();
 		if(isset($tag->display)){
 			$tag = $tag->display;
@@ -518,13 +483,7 @@ class Item implements ItemIds, \JsonSerializable{
 		if($name === ""){
 			$this->clearCustomName();
 		}
-
-		if(!$this->hasCompoundTag()){
-			$tag = new CompoundTag("", []);
-		}else{
-			$tag = $this->getNamedTag();
-		}
-
+		$tag = $this->getNamedTag();
 		if(isset($tag->display) and $tag->display instanceof CompoundTag){
 			$tag->display->Name = new StringTag("Name", $name);
 		}else{
@@ -542,9 +501,6 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return $this
 	 */
 	public function clearCustomName(){
-		if(!$this->hasCompoundTag()){
-			return $this;
-		}
 		$tag = $this->getNamedTag();
 
 		if(isset($tag->display) and $tag->display instanceof CompoundTag){
@@ -580,12 +536,11 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return $this
 	 */
 	public function setLore(array $lines){
-		$tag = $this->getNamedTag() ?? new CompoundTag("", []);
+		$tag = $this->getNamedTag();
 		if(!isset($tag->display)){
 			$tag->display = new CompoundTag("display", []);
 		}
-		$tag->display->Lore = new ListTag("Lore");
-		$tag->display->Lore->setTagType(NBT::TAG_String);
+		$tag->display->Lore = new ListTag("Lore", [], NBT::TAG_String);
 		$count = 0;
 		foreach($lines as $line){
 			$tag->display->Lore[$count++] = new StringTag("", $line);
@@ -601,25 +556,21 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return Tag|null
 	 */
 	public function getNamedTagEntry($name){
-		$tag = $this->getNamedTag();
-		if($tag !== null){
-			return $tag->{$name} ?? null;
-		}
-
-		return null;
+		return $this->getNamedTag()->{$name} ?? null;
 	}
 
 	/**
-	 * Returns a tree of Tag objects representing the Item's NBT
-	 * @return null|CompoundTag
+	 * Returns a tree of Tag objects representing the Item's NBT. If the item does not have any NBT, an empty CompoundTag
+	 * object is returned to allow the caller to manipulate and apply back to the item.
+	 *
+	 * @return CompoundTag
 	 */
-	public function getNamedTag(){
-		if(!$this->hasCompoundTag()){
-			return null;
-		}elseif($this->cachedNBT !== null){
-			return $this->cachedNBT;
+	public function getNamedTag() : CompoundTag{
+		if(!$this->hasCompoundTag() and $this->cachedNBT === null){
+			$this->cachedNBT = new CompoundTag();
 		}
-		return $this->cachedNBT = self::parseCompoundTag($this->tags);
+
+		return $this->cachedNBT ?? ($this->cachedNBT = self::parseCompoundTag($this->tags));
 	}
 
 	/**

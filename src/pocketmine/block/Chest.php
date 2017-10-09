@@ -96,7 +96,7 @@ class Chest extends Transparent{
 
 		$this->getLevel()->setBlock($blockReplace, $this, true, true);
 		$nbt = new CompoundTag("", [
-			new ListTag("Items", []),
+			new ListTag("Items", [], NBT::TAG_Compound),
 			new StringTag("id", Tile::CHEST),
 			new IntTag("x", $this->x),
 			new IntTag("y", $this->y),
@@ -143,7 +143,7 @@ class Chest extends Transparent{
 				$chest = $t;
 			}else{
 				$nbt = new CompoundTag("", [
-					new ListTag("Items", []),
+					new ListTag("Items", [], NBT::TAG_Compound),
 					new StringTag("id", Tile::CHEST),
 					new IntTag("x", $this->x),
 					new IntTag("y", $this->y),

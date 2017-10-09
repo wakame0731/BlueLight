@@ -56,6 +56,7 @@ use pocketmine\event\player\PlayerChangeSkinEvent;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerEditBookEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerGameModeChangeEvent;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -88,6 +89,8 @@ use pocketmine\inventory\transaction\CraftingTransaction;
 use pocketmine\inventory\transaction\InventoryTransaction;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\item\WritableBook;
+use pocketmine\item\WrittenBook;
 use pocketmine\level\ChunkLoader;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
@@ -112,6 +115,7 @@ use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\BatchPacket;
 use pocketmine\network\mcpe\protocol\BlockEntityDataPacket;
 use pocketmine\network\mcpe\protocol\BlockPickRequestPacket;
+use pocketmine\network\mcpe\protocol\BookEditPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\ChunkRadiusUpdatedPacket;
 use pocketmine\network\mcpe\protocol\ClientToServerHandshakePacket;
@@ -3097,6 +3101,55 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		$this->dataPacket($pk);
 		return true;
 	}
+
+	public function handleBookEdit(BookEditPacket $packet) : bool{
+		/** @var WritableBook $oldBook */
+		$oldBook = $this->inventory->getItem($packet->inventorySlot - 9);
+		if($oldBook->getId() !== Item::WRITABLE_BOOK){
+			return false;
+		}
+		
+		$newBook = clone $oldBook;
+		$modifiedPages = [];
+		
+		switch($packet->type){
+			case BookEditPacket::TYPE_REPLACE_PAGE:
+				$newBook->setPageText($packet->pageNumber, $packet->text);
+				$modifiedPages[] = $packet->pageNumber;
+				break;
+			case BookEditPacket::TYPE_ADD_PAGE:
+				$newBook->insertPage($packet->pageNumber, $packet->text);
+				$modifiedPages[] = $packet->pageNumber;
+				break;
+			case BookEditPacket::TYPE_DELETE_PAGE:
+				$newBook->deletePage($packet->pageNumber);
+				$modifiedPages[] = $packet->pageNumber;
+				break;
+			case BookEditPacket::TYPE_SWAP_PAGES:
+				$newBook->swapPage($packet->pageNumber, $packet->secondaryPageNumber);
+				$modifiedPages = [$packet->pageNumber, $packet->secondaryPageNumber];
+				break;
+			case BookEditPacket::TYPE_SIGN_BOOK:
+				/** @var WrittenBook $newBook */
+				$newBook = Item::get(Item::WRITTEN_BOOK, 0, 1, $newBook->getNamedTag());
+				$newBook->setAuthor($packet->author);
+				$newBook->setTitle($packet->title);
+				$newBook->setGeneration(WrittenBook::GENERATION_ORIGINAL);
+				break;
+			default:
+				return false;
+		}
+		
+		$this->getServer()->getPluginManager()->callEvent($event = new PlayerEditBookEvent($this, $oldBook, $newBook, $packet->type, $modifiedPages));
+		if($event->isCancelled()){
+			return true;
+		}
+		
+		$this->getInventory()->setItem($packet->inventorySlot - 9, $event->getNewBook());
+		
+		return true;
+			}
+		
 
 	/**
 	 * Called when a packet is received from the client. This method will call DataPacketReceiveEvent.
