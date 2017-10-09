@@ -335,7 +335,7 @@ class Effect{
 	public function applyEffect(Entity $entity){
 		switch($this->id){
 			case Effect::POISON:
-				if($entity->getHealth() > 1){
+				if($entity->getHealth() >= 2){
 					$ev = new EntityDamageEvent($entity, EntityDamageEvent::CAUSE_MAGIC, 1);
 					$entity->attack($ev);
 				}
