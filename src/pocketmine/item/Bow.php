@@ -100,11 +100,7 @@ class Bow extends Tool{
 				if($player->isSurvival()){
 					$player->getInventory()->removeItem(ItemFactory::get(Item::ARROW, 0, 1));
 					$this->setDamage($this->getDamage() + 1);
-					if($this->getDamage() >= $this->getMaxDurability()){
-						$player->getInventory()->setItemInHand(ItemFactory::get(Item::AIR, 0, 0));
-					}else{
-						$player->getInventory()->setItemInHand($this);
-					}
+					$this->applyDamage(1);
 				}
 
 				if($entity instanceof Projectile){

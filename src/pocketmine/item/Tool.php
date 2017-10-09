@@ -27,7 +27,7 @@ use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\item\enchantment\Enchantment;
 
-abstract class Tool extends Item{
+abstract class Tool extends Durable{
 	const TIER_WOODEN = 1;
 	const TIER_GOLD = 2;
 	const TIER_STONE = 3;
@@ -67,33 +67,33 @@ abstract class Tool extends Item{
 			if ($object instanceof Entity) {
 				if ($this->isHoe() !== false or $this->isSword() !== false) {
 					//Hoe and Sword
-					$this->meta++;
+					$this->applyDamage(1);
 					return true;
 				} elseif ($this->isPickaxe() !== false or $this->isAxe() !== false or $this->isShovel() !== false) {
 					//Pickaxe Axe and Shovel
-					$this->meta += 2;
+					$this->applyDamage(2);
 					return true;
 				}
 				return true;//Other tool do not lost durability white hitting
 			} elseif ($object instanceof Block) {
 				if ($this->isShears() !== false) {
 					if ($object->getToolType() === Tool::TYPE_SHEARS) {//This should be checked in each block
-						$this->meta++;
+						applyDamage(1);
 					}
 					return true;
 				} elseif ($object->getHardness() > 0) {//Sword Pickaxe Axe and Shovel
 					if ($this->isSword() !== false) {
-						$this->meta += 2;
+						$this->applyDamage(2);
 						return true;
 					} elseif ($this->isPickaxe() !== false or $this->isAxe() !== false or $this->isShovel() !== false) {
-						$this->meta += 1;
+						$this->applyDamage(1);
 						return true;
 					}
 				}
 			}
 		} elseif ($type === 2) {//For Touch. only trigger when OnActivate return true
 			if ($this->isHoe() !== false or $this->id === self::FLINT_STEEL or $this->isShovel() !== false) {
-				$this->meta++;
+				$this->applyDamage(2);
 				return true;
 			}
 		}
@@ -130,12 +130,6 @@ abstract class Tool extends Item{
 
 		return $levels[$type];
 	}
-
-	public function isUnbreakable(){
-		$tag = $this->getNamedTagEntry("Unbreakable");
-		return $tag !== null and $tag->getValue() > 0;
-	}
-
 
 	public function isPickaxe(){
 		return false;
