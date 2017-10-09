@@ -26,6 +26,7 @@ namespace pocketmine\item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\LongTag;
 
 class WritableBook extends Item{
 
@@ -75,6 +76,20 @@ class WritableBook extends Item{
 
 		$namedTag = $this->getNamedTag();
 		$namedTag->pages->{$pageId}->text->setValue($pageText);
+		$this->setNamedTag($namedTag);
+
+		return $created;
+	}
+
+	public function setPageImage(int $pageId, string $pageImage) : bool{
+		$created = false;
+		if(!$this->pageExists($pageId)){
+			$this->addPage($pageId);
+			$created = true;
+		}
+
+		$namedTag = $this->getNamedTag();
+		$namedTag->pages->{$pageId}->photoname->setValue($pageImage);
 		$this->setNamedTag($namedTag);
 
 		return $created;
@@ -217,5 +232,15 @@ class WritableBook extends Item{
 		return array_filter((array) $namedTag->pages, function(string $key){
 			return is_numeric($key);
 		}, ARRAY_FILTER_USE_KEY);
+	}
+
+	public function setbookId($bookId) : void{
+		$namedTag = $this->getNamedTag();
+		if(isset($namedTag->bookId)){
+			$namedTag->id->setValue($bookId);
+		}else{
+			$namedTag->id = new LongTag("id", $bookId);
+		}
+		$this->setNamedTag($namedTag);
 	}
 }
