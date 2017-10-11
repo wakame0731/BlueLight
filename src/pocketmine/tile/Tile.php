@@ -46,6 +46,7 @@ abstract class Tile extends Position{
 	const SIGN = "Sign";
 	const SKULL = "Skull";
 	const BED = "Bed";
+	const BANNER = "Banner";
 	const ENDER_CHEST = "EnderChest";
 	const SHULKER_BOX = "ShulkerBox";
 
@@ -80,6 +81,7 @@ abstract class Tile extends Position{
 		self::registerTile(Skull::class);
 		self::registerTile(EnderChest::class);
 		self::registerTile(ShulkerBox::class);
+		self::registerTile(Banner::class);
 	}
 
 	/**
