@@ -287,6 +287,7 @@ abstract class Entity extends Location implements Metadatable{
 		Entity::registerEntity(Vindicator::class);
 		Entity::registerEntity(Evoker::class);
 		Entity::registerEntity(Vex::class);
+		Entity::registerEntity(Fireworks::class);
 	}
 
 	/**
