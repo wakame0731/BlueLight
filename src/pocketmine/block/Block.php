@@ -381,10 +381,8 @@ class Block extends Position implements BlockIds, Metadatable{
 				($item->isSword() && $this->getId()===Item::COBWEB))
 			){
 				if($tier = $item->isSword()){
-					echo "Sow?";
 					$base /= 10;
 				}else{
-					echo "She?";
 					$base /= 15;
 				}
 			}elseif(
