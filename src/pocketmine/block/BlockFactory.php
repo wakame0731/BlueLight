@@ -153,7 +153,7 @@ class BlockFactory{
 			self::registerBlock(new Cactus());
 			self::registerBlock(new Clay());
 			self::registerBlock(new Sugarcane());
-
+			//TODO: JUKEBOX
 			self::registerBlock(new Fence());
 			self::registerBlock(new Pumpkin());
 			self::registerBlock(new Netherrack());
@@ -246,7 +246,8 @@ class BlockFactory{
 			self::registerBlock(new Coal());
 			self::registerBlock(new PackedIce());
 			self::registerBlock(new DoublePlant());
-
+			//TODO: STANDING_BANNER
+			//TODO: WALL_BANNER
 			//TODO: DAYLIGHT_DETECTOR_INVERTED
 			//TODO: RED_SANDSTONE
 			//TODO: RED_SANDSTONE_STAIRS
@@ -268,11 +269,12 @@ class BlockFactory{
 			self::registerBlock(new GrassPath());
 			self::registerBlock(new ItemFrame());
 			//TODO: CHORUS_FLOWER
-			//TODO: PURPUR_BLOCK
+			self::registerBlock(new Purpur());
 
-			//TODO: PURPUR_STAIRS
+			self::registerBlock(new PurpurStairs());
 
-			//TODO: END_BRICKS
+			//TODO: UNDYED_SHULKER_BOX
+			self::registerBlock(new EndStoneBricks());
 			//TODO: FROSTED_ICE
 			self::registerBlock(new EndRod());
 			//TODO: END_GATEWAY
@@ -315,6 +317,7 @@ class BlockFactory{
 			//TODO: INFO_UPDATE2
 			//TODO: MOVINGBLOCK
 			//TODO: OBSERVER
+			//TODO: STRUCTURE_BLOCK
 
 			//TODO: RESERVED6
 
