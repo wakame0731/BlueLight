@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace pocketmine\item;
 
 
-class Shears extends Tool{
+class Shears extends Durable{
 	public function __construct(int $meta = 0){
 		parent::__construct(self::SHEARS, $meta, "Shears");
 	}

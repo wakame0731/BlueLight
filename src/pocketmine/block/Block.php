@@ -378,27 +378,13 @@ class Block extends Position implements BlockIds, Metadatable{
 		if($this->canBeBrokenWith($item)){
 			if($this->getToolType() === Tool::TYPE_SHEARS and (
 				$item->isShears() || 
-				($item->isSword() && $this->getId() === self::COBWEB))
+				($item->isSword() && $this->getId()===Item::COBWEB))
 			){
 				if($tier = $item->isSword()){
-					switch($tier){
-						case Tool::TIER_WOODEN:
-							$base /= 2;
-							break;
-						case Tool::TIER_STONE:
-							$base /= 4;
-						break;
-						case Tool::TIER_IRON:
-							$base /= 6;
-							break;
-						case Tool::TIER_DIAMOND:
-							$base /= 8;
-							break;
-						case Tool::TIER_GOLD:
-							$base /= 12;
-						break;
-					}
+					echo "Sow?";
+					$base /= 10;
 				}else{
+					echo "She?";
 					$base /= 15;
 				}
 			}elseif(
@@ -459,7 +445,7 @@ class Block extends Position implements BlockIds, Metadatable{
 			$ef = $player->getEffect(Effect::HASTE);
 			$base *= 1.0-$ef->getEffectLevel()*0.2;
 		}
-
+		
 		return $base;
 	}
 

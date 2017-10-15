@@ -25,7 +25,9 @@ namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\item\Tool;
+use pocketmine\item\enchantment\Enchantment;
 
 class Cobweb extends Flowable{
 
@@ -47,8 +49,11 @@ class Cobweb extends Flowable{
 		return 4;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getToolType() : int{
-		return Tool::TYPE_SWORD;
+		return Tool::TYPE_SHEARS;
 	}
 
 	public function onEntityCollide(Entity $entity){
@@ -56,8 +61,22 @@ class Cobweb extends Flowable{
 	}
 
 	public function getDrops(Item $item) : array{
-		//TODO: correct drops
-		return [];
+		if($item->isShears()){
+			return [
+				ItemFactory::get(Item::STRING, 0, 1)
+			];
+		}elseif($item->isSword()){
+			if($item->getEnchantmentLevel(Enchantment::TYPE_MINING_SILK_TOUCH) > 0){
+				return [
+					ItemFactory::get(Item::COBWEB, 0, 1)
+				];
+			}else{
+				return [
+					ItemFactory::get(Item::STRING, 0, 1)
+				];
+			}
+		}
+		return [ItemFactory::get(Item::AIR, 0, 1)];
 	}
 
 	public function diffusesSkyLight() : bool{

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace pocketmine\item;
 
 
-class WoodenSword extends Tool{
+class WoodenSword extends Durable{
 	public function __construct(int $meta = 0){
 		parent::__construct(self::WOODEN_SWORD, $meta, "Wooden Sword");
 	}
