@@ -114,8 +114,6 @@ class ItemFactory{
 			self::registerItem(new IronDoor());
 			self::registerItem(new Redstone());
 			self::registerItem(new Snowball());
-			self::registerItem(new EnderPearl());
-			self::registerItem(new EnderEye());
 			self::registerItem(new Boat());
 			self::registerItem(new Item(Item::LEATHER, 0, "Leather"));
 
@@ -151,7 +149,7 @@ class ItemFactory{
 			self::registerItem(new RawChicken());
 			self::registerItem(new CookedChicken());
 			//TODO: ROTTEN_FLESH
-			//TODO: ENDER_PEARL
+			self::registerItem(new EnderPearl());
 			self::registerItem(new BlazeRod());
 			self::registerItem(new Item(Item::GHAST_TEAR, 0, "Ghast Tear"));
 			self::registerItem(new Item(Item::GOLD_NUGGET, 0, "Gold Nugget"));
@@ -164,7 +162,7 @@ class ItemFactory{
 			self::registerItem(new Item(Item::MAGMA_CREAM, 0, "Magma Cream"));
 			self::registerItem(new BrewingStand());
 			//TODO: CAULDRON
-			//TODO: ENDER_EYE
+			self::registerItem(new EnderEye());
 			self::registerItem(new Item(Item::GLISTERING_MELON, 0, "Glistering Melon"));
 			self::registerItem(new SpawnEgg());
 			//TODO: BOTTLE_O_ENCHANTING
@@ -185,6 +183,7 @@ class ItemFactory{
 			self::registerItem(new Item(Item::NETHER_STAR, 0, "Nether Star"));
 			self::registerItem(new PumpkinPie());
 			self::registerItem(new Fireworks());
+			//TODO: FIREWORKSCHARGE
 			//TODO: ENCHANTED_BOOK
 			//TODO: COMPARATOR
 			self::registerItem(new Item(Item::NETHER_BRICK, 0, "Nether Brick"));
@@ -207,6 +206,7 @@ class ItemFactory{
 			self::registerItem(new Item(Item::PRISMARINE_CRYSTALS, 0, "Prismarine Crystals"));
 			self::registerItem(new RawMutton());
 			self::registerItem(new CookedMutton());
+			//TODO: ARMOR_STAND
 			//TODO: END_CRYSTAL
 			self::registerItem(new SpruceDoor());
 			self::registerItem(new BirchDoor());
@@ -236,8 +236,21 @@ class ItemFactory{
 			self::registerItem(new ClownFish());
 			self::registerItem(new PufferFish());
 			self::registerItem(new CookedSalmon());
-
+			
 			self::registerItem(new GoldenAppleEnchanted());
+
+			//TODO: RECORD_13
+			//TODO: RECORD_CAT
+			//TODO: RECORD_BLOCKS
+			//TODO: RECORD_CHIRP
+			//TODO: RECORD_FAR
+			//TODO: RECORD_MALL
+			//TODO: RECORD_MELLOHI
+			//TODO: RECORD_STAL
+			//TODO: RECORD_STRAD
+			//TODO: RECORD_WARD
+			//TODO: RECORD_11
+			//TODO: RECORD_WAIT
 		}
 
 		Item::initCreativeItems();
