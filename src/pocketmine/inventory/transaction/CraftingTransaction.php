@@ -28,6 +28,8 @@ use pocketmine\inventory\BigCraftingGrid;
 use pocketmine\inventory\CraftingRecipe;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\network\mcpe\protocol\ContainerClosePacket;
+use pocketmine\network\mcpe\protocol\types\ContainerIds;
 use pocketmine\Player;
 
 class CraftingTransaction extends InventoryTransaction{
@@ -59,8 +61,8 @@ class CraftingTransaction extends InventoryTransaction{
 
 		if($this->inputs[$y][$x]->isNull()){
 			$this->inputs[$y][$x] = clone $item;
-		}else{
-			throw new \RuntimeException("Input $index has already been set");
+		}elseif(!$this->inputs[$y][$x]->equals($item)){
+			throw new \RuntimeException("Input $index has already been set and does not match the current item (expected " . $this->inputs[$y][$x] . ", got " . $item . ")");
 		}
 	}
 
@@ -74,8 +76,8 @@ class CraftingTransaction extends InventoryTransaction{
 
 		if($this->secondaryOutputs[$y][$x]->isNull()){
 			$this->secondaryOutputs[$y][$x] = clone $item;
-		}else{
-			throw new \RuntimeException("Output $index has already been set");
+		}elseif(!$this->secondaryOutputs[$y][$x]->equals($item)){
+			throw new \RuntimeException("Output $index has already been set and does not match the current item (expected " . $this->secondaryOutputs[$y][$x] . ", got " . $item . ")");
 		}
 	}
 
@@ -86,8 +88,8 @@ class CraftingTransaction extends InventoryTransaction{
 	public function setPrimaryOutput(Item $item) : void{
 		if($this->primaryOutput === null){
 			$this->primaryOutput = clone $item;
-		}else{
-			throw new \RuntimeException("Primary result item has already been set");
+		}elseif(!$this->primaryOutput->equals($item)){
+			throw new \RuntimeException("Primary result item has already been set and does not match the current item (expected " . $this->primaryOutput . ", got " . $item . ")");
 		}
 	}
 
@@ -140,6 +142,20 @@ class CraftingTransaction extends InventoryTransaction{
 	protected function callExecuteEvent() : bool{
 		$this->source->getServer()->getPluginManager()->callEvent($ev = new CraftItemEvent($this));
 		return !$ev->isCancelled();
+	}
+
+	protected function sendInventories() : void{
+		parent::sendInventories();
+
+		/*
+		 * TODO: HACK!
+		 * we can't resend the contents of the crafting window, so we force the client to close it instead.
+		 * So people don't whine about messy desync issues when someone cancels CraftItemEvent, or when a crafting
+		 * transaction goes wrong.
+		 */
+		$pk = new ContainerClosePacket();
+		$pk->windowId = ContainerIds::NONE;
+		$this->source->dataPacket($pk);
 	}
 
 	public function execute() : bool{

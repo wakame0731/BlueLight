@@ -2333,11 +2333,14 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 			if($this->craftingTransaction->getPrimaryOutput() !== null){
 				//we get the actions for this in several packets, so we can't execute it until we get the result
 
-				$this->craftingTransaction->execute(); //if it can't execute, no inventories will be modified
+				$this->craftingTransaction->execute();
 				$this->craftingTransaction = null;
 			}
 
 			return true;
+		}elseif($this->craftingTransaction !== null){
+			$this->server->getLogger()->debug("Got unexpected normal inventory action with incomplete crafting transaction from " . $this->getName() . ", refusing to execute crafting");
+			$this->craftingTransaction = null;
 		}
 
 		switch($packet->transactionType){
@@ -2345,12 +2348,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 				$transaction = new InventoryTransaction($this, $actions);
 
 				if(!$transaction->execute()){
-					foreach($transaction->getInventories() as $inventory){
-						$inventory->sendContents($this);
-						if($inventory instanceof PlayerInventory){
-							$inventory->sendArmorContents($this);
-						}
-					}
 
 					$this->server->getLogger()->debug("Failed to execute inventory transaction from " . $this->getName() . " with actions: " . json_encode($packet->actions));
 
