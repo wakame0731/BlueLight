@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ *  ____            _        _   __  __ _                  __  __ ____  
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,19 +15,99 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- *
+ * 
  *
 */
 
-declare(strict_types=1);
-
 namespace pocketmine\item;
 
+use pocketmine\block\Block;
+use pocketmine\item\Item;
+use pocketmine\Player;
+use pocketmine\math\Vector3;
+use pocketmine\level\Level;
+
 class Dye extends Item{
+	const BLACK = 0;
+	const RED = 1;
+	const GREEN = 2;
+	const BROWN = 3; const COCOA_BEANS = 3;
+	const BLUE = 4; const LAPIS_LAZULI = 4;
+	const PURPLE = 5;
+	const CYAN = 6;
+	const SILVER = 7; const LIGHT_GRAY = 7;
+	const GRAY = 8;
+	const PINK = 9;
+	const LIME = 10;
+	const YELLOW = 11;
+	const LIGHT_BLUE = 12;
+	const MAGENTA = 13;
+	const ORANGE = 14;
+	const WHITE = 15; const BONE_MEAL = 15;
+
 	public function __construct(int $meta = 0){
-		parent::__construct(self::DYE, $meta, "Dye");
+		if ($meta === 3) {
+			$this->block = BlockFactory::get(Block::COCOA_BLOCK);
+			parent::__construct(self::DYE, 3, "Cocoa Beans");
+		} else {
+			parent::__construct(self::DYE, $meta, $this->getNameByMeta($meta));
+		}
 	}
 
-	//TODO: names
-}
+	public function getNameByMeta(int $meta) : string{
+		switch($meta){
+			case self::BLACK:
+				return "Ink Sac";
+			case self::RED:
+				return "Rose Red";
+			case self::GREEN:
+				return "Cactus Green";
+			case self::BROWN:
+				return "Cocoa Beans";
+			case self::BLUE:
+				return "Lapis Lazuli";
+			case self::PURPLE:
+				return "Purple Dye";
+			case self::CYAN:
+				return "Cyan Dye";
+			case self::SILVER:
+				return "Light Gray Dye";
+			case self::GRAY:
+				return "Gray Dye";
+			case self::PINK:
+				return "Pink Dye";
+			case self::LIME:
+				return "Lime Dye";
+			case self::YELLOW:
+				return "Dandelion Yellow";
+			case self::LIGHT_BLUE:
+				return "Light Blue Dye";
+			case self::MAGENTA:
+				return "Magenta Dye";
+			case self::ORANGE:
+				return "Orange Dye";
+			case self::WHITE:
+				return "Bone Meal";
+			default:
+				return "Dye";
+		}
+	}
 
+	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos):bool{
+		if($block->getId() === Block::WOOD and $block->getDamage() === 3 and $this->getDamage() === 3){
+			if($face !== 0 and $face !== 1){
+				$faces = [
+					2 => 0,
+					3 => 2,
+					4 => 3,
+					5 => 1,
+				];
+				$meta = $faces[$face];
+				$this->count--; 
+				$level->setBlock($this, Block::get(Item::COCOA_BLOCK, $meta), true);
+				return true;
+			}
+		}
+		return false;
+	}
+}
