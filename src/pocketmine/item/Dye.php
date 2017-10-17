@@ -92,22 +92,4 @@ class Dye extends Item{
 				return "Dye";
 		}
 	}
-
-	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos):bool{
-		if($block->getId() === Block::WOOD and $block->getDamage() === 3 and $this->getDamage() === 3){
-			if($face !== 0 and $face !== 1){
-				$faces = [
-					2 => 0,
-					3 => 2,
-					4 => 3,
-					5 => 1,
-				];
-				$meta = $faces[$face];
-				$this->count--; 
-				$level->setBlock($this, Block::get(Item::COCOA_BLOCK, $meta), true);
-				return true;
-			}
-		}
-		return false;
-	}
 }
