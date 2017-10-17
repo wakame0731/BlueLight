@@ -25,23 +25,34 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\math\Vector3;
+use pocketmine\level\Level;
 
-class Tripwire extends Flowable{
+class Redstonewire extends Flowable{
 
-	protected $id = self::TRIPWIRE;
+	protected $id = self::REDSTONE_WIRE;
 
 	public function __construct(int $meta = 0){
 		$this->meta = $meta;
 	}
 
 	public function getName() : string{
-		return "Tripwire";
+		return "Redstone Wire";
 	}
 
 	public function getDrops(Item $item) : array{
 		return [
-			ItemFactory::get(Item::STRING, 0, 1)
+			ItemFactory::get(Item::REDSTONE, 0, 1)
 		];
 	}
-	
+
+	public function onUpdate($type){
+		if($type === Level::BLOCK_UPDATE_NORMAL){
+			if($this->getSide(Vector3::SIDE_DOWN)->getId() === Block::AIR){
+				$this->getLevel()->setBlock($this, new Air(), false, false);
+				$this->level->dropItem($this,Item::get(Item::REDSTONE,0));
+				return Level::BLOCK_UPDATE_NORMAL;
+			}
+		}
+	}
 }

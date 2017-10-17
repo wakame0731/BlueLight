@@ -25,12 +25,30 @@ namespace pocketmine\item;
 
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use pocketmine\item\Item;
+use pocketmine\level\Level;
+use pocketmine\math\Vector3;
+use pocketmine\Player;
 
 class Redstone extends Item{
 	public function __construct(int $meta = 0){
-		$this->block = BlockFactory::get(Block::REDSTONE_WIRE);
 		parent::__construct(self::REDSTONE, $meta, "Redstone");
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function canBeActivated() : bool{
+		return true;
+	}
+
+	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{
+		if($target->getId()!==Block::REDSTONE_WIRE){
+			$this->count--;
+			$level->setBlock($target->getSide(Vector3::SIDE_UP),Block::get(Item::REDSTONE_WIRE,0), true);
+			return true;
+		}
+		return false;
+	}
 }
 

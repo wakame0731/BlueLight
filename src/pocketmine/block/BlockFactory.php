@@ -124,7 +124,7 @@ class BlockFactory{
 			self::registerBlock(new MonsterSpawner());
 			self::registerBlock(new WoodenStairs(Block::OAK_STAIRS, 0, "Oak Stairs"));
 			self::registerBlock(new Chest());
-			//TODO: REDSTONE_WIRE
+			self::registerBlock(new Redstonewire());
 			self::registerBlock(new DiamondOre());
 			self::registerBlock(new Diamond());
 			self::registerBlock(new CraftingTable());
