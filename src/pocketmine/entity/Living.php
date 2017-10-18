@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace pocketmine\entity;
 
 use pocketmine\block\Block;
+use pocketmine\block\Water;
+use pocketmine\block\SlimeBlock;
+use pocketmine\block\StillWater;
 use pocketmine\entity\AI\EntityAITasks;
 use pocketmine\entity\AI\EntityLookHelper;
 use pocketmine\entity\AI\EntityMoveHelper;
@@ -36,6 +39,7 @@ use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Timings;
 use pocketmine\item\Item as ItemItem;
+use pocketmine\item\Elytra;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
@@ -341,10 +345,36 @@ abstract class Living extends Entity implements Damageable{
 	}
 
 	public function fall(float $fallDistance){
-		$damage = floor($fallDistance - 3 - ($this->hasEffect(Effect::JUMP) ? $this->getEffect(Effect::JUMP)->getEffectLevel() : 0));
+		$fallDistance=ceil($fallDistance+0.5);
+		//echo "Dist".$fallDistance."\n";
+		if($this instanceof Player and $this->isSpectator()){
+			return;
+		}
+		if($this->isInsideOfWater()){
+			return;
+		}
+		$damage = floor($fallDistance - 3 - ($this->hasEffect(Effect::JUMP) ? $this->getEffect(Effect::JUMP)->getAmplifier() + 1 : 0));
+
+		//Get the block directly beneath the player's feet, check if it is a slime block
+		if($this->getLevel()->getBlock($this->floor()->subtract(0, 1, 0)) instanceof SlimeBlock){
+			$damage = 0;
+		}
+		if($this->getLevel()->getBlock($this->floor()) instanceof Water){
+			$damage = 0;
+		}
+		if($this->getLevel()->getBlock($this->floor()) instanceof StillWater){
+			$damage = 0;
+		}
+		//TODO Improve
+		if($this instanceof Player){
+			if($this->getInventory()->getChestplate() instanceof Elytra){
+				$damage = 0;
+			}
+		}
 		if($damage > 0){
 			$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_FALL, $damage);
 			$this->attack($ev);
+			//echo "Dam".$damage."\n";
 		}
 	}
 
