@@ -32,6 +32,8 @@ use pocketmine\Player;
 use pocketmine\tile\ShulkerBox as TileShulkerBox;
 use pocketmine\tile\Tile;
 use pocketmine\math\Vector3;
+use pocketmine\item\ItemFactory;
+
 class ShulkerBox extends Transparent {
 	const WHITE = 0;
 	const ORANGE = 1;
@@ -129,13 +131,11 @@ class ShulkerBox extends Transparent {
 	 *
 	 * @return array
 	 */
-	/*
+	
 	public function getDrops(Item $item) : array{
- 			return [
- 				[Item::SHULKER_BOX, $this->meta & 0x0f, 1],
- 			];
+		return parent::getDrops($item); 
 	}
-	*/
+	
 
 	public function getName() : string{
 		static $names = [
