@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\item\Tool;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NBT;
@@ -123,7 +124,9 @@ class BurningFurnace extends Solid{
 
 	public function getDrops(Item $item) : array{
 		if($item->isPickaxe() >= Tool::TIER_WOODEN){
-			return parent::getDrops($item);
+			return [
+				ItemFactory::get(Item::FURNACE, 0, 1)
+			];
 		}
 
 		return [];
