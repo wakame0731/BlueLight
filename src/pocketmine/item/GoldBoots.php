@@ -29,7 +29,23 @@ class GoldBoots extends Armor{
 		parent::__construct(self::GOLD_BOOTS, $meta, "Gold Boots");
 	}
 
-	public function getDefensePoints() : int{
+	public function getArmorTier(){
+		return Armor::TIER_GOLD;
+	}
+
+	public function getArmorType(){
+		return Armor::TYPE_BOOTS;
+	}
+
+	public function getMaxDurability(){
+		return 92;
+	}
+
+	public function getArmorValue(){
 		return 1;
+	}
+
+	public function isBoots(){
+		return true;
 	}
 }

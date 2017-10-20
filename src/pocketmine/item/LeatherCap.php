@@ -29,7 +29,23 @@ class LeatherCap extends Armor{
 		parent::__construct(self::LEATHER_CAP, $meta, "Leather Cap");
 	}
 
-	public function getDefensePoints() : int{
+	public function getArmorTier(){
+		return Armor::TIER_LEATHER;
+	}
+
+	public function getArmorType(){
+		return Armor::TYPE_HELMET;
+	}
+
+	public function getMaxDurability(){
+		return 56;
+	}
+
+	public function getArmorValue(){
 		return 1;
+	}
+
+	public function isHelmet(){
+		return true;
 	}
 }

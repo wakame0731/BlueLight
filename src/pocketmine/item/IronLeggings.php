@@ -29,7 +29,23 @@ class IronLeggings extends Armor{
 		parent::__construct(self::IRON_LEGGINGS, $meta, "Iron Leggings");
 	}
 
-	public function getDefensePoints() : int{
+	public function getArmorTier(){
+		return Armor::TIER_IRON;
+	}
+
+	public function getArmorType(){
+		return Armor::TYPE_LEGGINGS;
+	}
+
+	public function getMaxDurability(){
+		return 226;
+	}
+
+	public function getArmorValue(){
 		return 5;
+	}
+
+	public function isLeggings(){
+		return true;
 	}
 }

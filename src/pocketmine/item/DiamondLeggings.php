@@ -29,7 +29,23 @@ class DiamondLeggings extends Armor{
 		parent::__construct(self::DIAMOND_LEGGINGS, $meta, "Diamond Leggings");
 	}
 
-	public function getDefensePoints() : int{
+	public function getArmorTier(){
+		return Armor::TIER_DIAMOND;
+	}
+
+	public function getArmorType(){
+		return Armor::TYPE_LEGGINGS;
+	}
+
+	public function getMaxDurability(){
+		return 496;
+	}
+
+	public function getArmorValue(){
 		return 6;
+	}
+
+	public function isLeggings(){
+		return true;
 	}
 }

@@ -213,7 +213,7 @@ class ItemFactory{
 			self::registerItem(new JungleDoor());
 			self::registerItem(new AcaciaDoor());
 			self::registerItem(new DarkOakDoor());
-			//TODO: CHORUS_FRUIT
+			self::registerItem(new ChorusFruit());
 			self::registerItem(new Item(Item::CHORUS_FRUIT_POPPED, 0, "Popped Chorus Fruit"));
 
 			//TODO: DRAGON_BREATH

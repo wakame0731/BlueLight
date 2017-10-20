@@ -28,8 +28,24 @@ class ChainHelmet extends Armor{
 	public function __construct(int $meta = 0){
 		parent::__construct(self::CHAIN_HELMET, $meta, "Chainmail Helmet");
 	}
+	
+	public function getArmorTier(){
+		return Armor::TIER_CHAIN;
+	}
 
-	public function getDefensePoints() : int{
-		return 2;
+	public function getArmorType(){
+		return Armor::TYPE_HELMET;
+	}
+
+	public function getMaxDurability(){
+		return 166;
+	}
+
+	public function getArmorValue(){
+		return 1;
+	}
+
+	public function isHelmet(){
+		return true;
 	}
 }
