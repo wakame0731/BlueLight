@@ -1014,4 +1014,33 @@ class Item implements ItemIds, \JsonSerializable{
 		return $item;
 	}
 
+	public function isArmor(){
+		return false;
+	}
+
+	public function getArmorValue(){
+		return false;
+	}
+
+	public function isBoots(){
+		return false;
+	}
+
+	public function isHelmet(){
+		return false;
+	}
+
+	public function isLeggings(){
+		return false;
+	}
+  
+	public function isChestplate(){
+		return false;
+	}
+
+	public function getAttackDamage(){
+		return 1;
+	}
+
+
 }

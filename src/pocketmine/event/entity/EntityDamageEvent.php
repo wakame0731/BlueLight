@@ -23,8 +23,13 @@ declare(strict_types=1);
 
 namespace pocketmine\event\entity;
 
+use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\event\Cancellable;
+use pocketmine\inventory\PlayerInventory;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\Item;
+use pocketmine\Player;
 
 /**
  * Called when an entity takes damage.
@@ -55,11 +60,19 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 	const CAUSE_MAGIC = 13;
 	const CAUSE_CUSTOM = 14;
 	const CAUSE_STARVATION = 15;
-
+	const CAUSE_LIGHTNING = 16;
+	
 	/** @var int */
 	private $cause;
+	private $EPF = 0;
+	private $fireProtectL = 0;
 	/** @var float[] */
 	private $modifiers;
+	private $rateModifiers = [];
+	private $usedArmors = [];
+	private $thornsLevel = [];
+	private $thornsArmor;
+	private $thornsDamage = 0;
 	/** @var float[] */
 	private $originals;
 
@@ -84,6 +97,93 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 
 		if(!isset($this->modifiers[self::MODIFIER_BASE])){
 			throw new \InvalidArgumentException("BASE Damage modifier missing");
+		}
+		if($cause !== self::CAUSE_VOID and $cause !== self::CAUSE_SUICIDE){
+			if($entity->hasEffect(Effect::DAMAGE_RESISTANCE)){
+				$RES_level = 1 - 0.20 * ($entity->getEffect(Effect::DAMAGE_RESISTANCE)->getAmplifier() + 1);
+				if($RES_level < 0){
+					$RES_level = 0;
+				}
+				$this->setRateDamage($RES_level, self::MODIFIER_RESISTANCE);
+			}
+		}
+
+		//TODO: add zombie
+		if($entity instanceof Player and $entity->getInventory() instanceof PlayerInventory){
+			switch($cause){
+				case self::CAUSE_CONTACT:
+				case self::CAUSE_ENTITY_ATTACK:
+				case self::CAUSE_PROJECTILE:
+				case self::CAUSE_FIRE:
+				case self::CAUSE_LAVA:
+				case self::CAUSE_BLOCK_EXPLOSION:
+				case self::CAUSE_ENTITY_EXPLOSION:
+				case self::CAUSE_LIGHTNING:
+					$points = 0;
+					foreach($entity->getInventory()->getArmorContents() as $index => $i){
+						if($i->isArmor()){
+							$points += $i->getArmorValue();
+							$this->usedArmors[$index] = 1;
+						}
+					}
+					if($points !== 0){
+						$this->setRateDamage(1 - 0.04 * $points, self::MODIFIER_ARMOR);
+					}
+					//For Protection
+					$spe_Prote = null;
+					switch($cause){
+						case self::CAUSE_ENTITY_EXPLOSION:
+						case self::CAUSE_BLOCK_EXPLOSION:
+							$spe_Prote = Enchantment::TYPE_ARMOR_EXPLOSION_PROTECTION;
+							break;
+						case self::CAUSE_FIRE:
+						case self::CAUSE_LAVA:
+							$spe_Prote = Enchantment::TYPE_ARMOR_FIRE_PROTECTION;
+							break;
+						case self::CAUSE_PROJECTILE:
+							$spe_Prote = Enchantment::TYPE_ARMOR_PROJECTILE_PROTECTION;
+							break;
+						default;
+							break;
+					}
+					foreach($this->usedArmors as $index => $cost){
+						$i = $entity->getInventory()->getArmorItem($index);
+						if($i->isArmor()){
+							$this->EPF += $i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_PROTECTION);
+							$this->fireProtectL = max($this->fireProtectL, $i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_FIRE_PROTECTION));
+							if($i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_THORNS) > 0){
+								$this->thornsLevel[$index] = $i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_THORNS);
+							}
+							if($spe_Prote !== null){
+								$this->EPF += 2 * $i->getEnchantmentLevel($spe_Prote);
+							}
+						}
+					}
+					break;
+				case self::CAUSE_FALL:
+					//Feather Falling
+					$i = $entity->getInventory()->getBoots();
+					if($i->isArmor()){
+						$this->EPF += $i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_PROTECTION);
+						$this->EPF += 3 * $i->getEnchantmentLevel(Enchantment::TYPE_ARMOR_FALL_PROTECTION);
+					}
+					break;
+				case self::CAUSE_FIRE_TICK:
+				case self::CAUSE_SUFFOCATION:
+				case self::CAUSE_DROWNING:
+				case self::CAUSE_VOID:
+				case self::CAUSE_SUICIDE:
+				case self::CAUSE_MAGIC:
+				case self::CAUSE_CUSTOM:
+				case self::CAUSE_STARVATION:
+					break;
+				default:
+					break;
+			}
+			if($this->EPF !== 0){
+				$this->EPF = min(20, ceil($this->EPF * mt_rand(50, 100) / 100));
+				$this->setRateDamage(1 - 0.04 * $this->EPF, self::MODIFIER_PROTECTION);
+			}
 		}
 	}
 
