@@ -25,10 +25,12 @@ namespace pocketmine\item;
 
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use pocketmine\level\Level;
+use pocketmine\Player;
+use pocketmine\math\Vector3;
 
 class Potato extends Food{
 	public function __construct(int $meta = 0){
-		$this->block = BlockFactory::get(Block::POTATO_BLOCK);
 		parent::__construct(self::POTATO, $meta, "Potato");
 	}
 
@@ -39,4 +41,20 @@ class Potato extends Food{
 	public function getSaturationRestore() : float{
 		return 0.6;
 	}
+
+	/** 
+   	* @return bool 
+   	*/ 
+	   public function canBeActivated() : bool{ 
+    	return true; 
+	}
+	  
+  	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{ 
+    	if($target->getId()===Block::FARMLAND and $face===Vector3::SIDE_UP){ 
+      		$this->count--; 
+      		$level->setBlock($target->getSide(Vector3::SIDE_UP),Block::get(Block::POTATO_BLOCK,0), true); 
+      		return true; 
+    	} 
+    return false; 
+  	} 	
 }

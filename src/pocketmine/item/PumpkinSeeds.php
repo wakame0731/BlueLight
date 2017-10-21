@@ -25,10 +25,28 @@ namespace pocketmine\item;
 
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use pocketmine\level\Level;
+use pocketmine\Player;
+use pocketmine\math\Vector3;
 
 class PumpkinSeeds extends Item{
 	public function __construct(int $meta = 0){
-		$this->block = BlockFactory::get(Block::PUMPKIN_STEM);
 		parent::__construct(self::PUMPKIN_SEEDS, $meta, "Pumpkin Seeds");
 	}
+
+	/** 
+   	* @return bool 
+   	*/ 
+	   public function canBeActivated() : bool{ 
+    	return true; 
+	}
+	  
+  	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{ 
+    	if($target->getId()===Block::FARMLAND and $face===Vector3::SIDE_UP){ 
+      		$this->count--; 
+      		$level->setBlock($target->getSide(Vector3::SIDE_UP),Block::get(Block::PUMPKIN_STEM,0), true); 
+      		return true; 
+    	} 
+    return false; 
+  	} 	
 }

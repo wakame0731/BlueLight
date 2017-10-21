@@ -25,10 +25,29 @@ namespace pocketmine\item;
 
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use pocketmine\level\Level;
+use pocketmine\Player;
+use pocketmine\math\Vector3;
 
 class NetherWart extends Item{
 	public function __construct(int $meta = 0){
-		$this->block = BlockFactory::get(Block::NETHER_WART_PLANT);
 		parent::__construct(self::NETHER_WART, $meta, "Nether Wart");
 	}
+
+	/** 
+   	* @return bool 
+   	*/ 
+	   public function canBeActivated() : bool{ 
+    	return true; 
+	}
+	  
+  	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{ 
+    	if($target->getId()===Block::SOUL_SAND and $face===Vector3::SIDE_UP){ 
+      		$this->count--; 
+      		$level->setBlock($target->getSide(Vector3::SIDE_UP),Block::get(Block::NETHER_WART_PLANT,0), true); 
+      		return true; 
+    	} 
+    return false; 
+	}
+
 }
