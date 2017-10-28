@@ -345,7 +345,7 @@ abstract class Living extends Entity implements Damageable{
 	}
 
 	public function fall(float $fallDistance){
-		$fallDistance=ceil($fallDistance+0.5);
+		//$fallDistance=ceil($fallDistance+0.5);
 		//echo "Dist".$fallDistance."\n";
 		if($this instanceof Player and $this->isSpectator()){
 			return;
@@ -353,7 +353,7 @@ abstract class Living extends Entity implements Damageable{
 		if($this->isInsideOfWater()){
 			return;
 		}
-		$damage = floor($fallDistance - 3 - ($this->hasEffect(Effect::JUMP) ? $this->getEffect(Effect::JUMP)->getAmplifier() + 1 : 0));
+		$damage = ceil($fallDistance - 3 - ($this->hasEffect(Effect::JUMP) ? $this->getEffect(Effect::JUMP)->getAmplifier() + 1 : 0));
 
 		//Get the block directly beneath the player's feet, check if it is a slime block
 		if($this->getLevel()->getBlock($this->floor()->subtract(0, 1, 0)) instanceof SlimeBlock){
