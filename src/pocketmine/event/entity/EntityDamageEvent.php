@@ -190,34 +190,67 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 	/**
 	 * @return int
 	 */
-	public function getCause() : int{
+	public function getCause(){
 		return $this->cause;
 	}
 
 	/**
 	 * @param int $type
 	 *
-	 * @return float
+	 * @return int
 	 */
-	public function getOriginalDamage(int $type = self::MODIFIER_BASE) : float{
-		return $this->originals[$type] ?? 0.0;
+	public function getOriginalDamage($type = self::MODIFIER_BASE){
+		if(isset($this->originals[$type])){
+			return $this->originals[$type];
+		}
+		return 0;
 	}
 
 	/**
 	 * @param int $type
 	 *
-	 * @return float
+	 * @return int
 	 */
-	public function getDamage(int $type = self::MODIFIER_BASE) : float{
-		return $this->modifiers[$type] ?? 0.0;
+	public function getDamage($type = self::MODIFIER_BASE){
+		if(isset($this->modifiers[$type])){
+			return $this->modifiers[$type];
+		}
+
+		return 0;
 	}
 
 	/**
 	 * @param float $damage
 	 * @param int   $type
+	 *
+	 * @throws \UnexpectedValueException
 	 */
-	public function setDamage(float $damage, int $type = self::MODIFIER_BASE){
+	public function setDamage($damage, $type = self::MODIFIER_BASE){
 		$this->modifiers[$type] = $damage;
+	}
+
+	/**
+	 * @param int $type
+	 *
+	 * @return float 1 - the percentage
+	 */
+	public function getRateDamage($type = self::MODIFIER_BASE){
+		if(isset($this->rateModifiers[$type])){
+			return $this->rateModifiers[$type];
+		}
+		return 1;
+	}
+
+	/**
+	 * @param float $damage
+	 * @param int   $type
+	 *
+	 * Notice:If you want to add/reduce the damage without reducing by Armor or effect. set a new Damage using setDamage
+	 * Notice:If you want to add/reduce the damage within reducing by Armor of effect. Plz change the MODIFIER_BASE
+	 * Notice:If you want to add/reduce the damage by multiplying. Plz use this function.
+	 */
+	public function setRateDamage($damage, $type = self::MODIFIER_BASE){
+		$this->rateModifiers[$type] = $damage;
 	}
 
 	/**
@@ -225,15 +258,86 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 	 *
 	 * @return bool
 	 */
-	public function isApplicable(int $type) : bool{
+	public function isApplicable($type){
 		return isset($this->modifiers[$type]);
 	}
 
 	/**
-	 * @return float
+	 * @return int
 	 */
-	public function getFinalDamage() : float{
-		return array_sum($this->modifiers);
+	public function getFinalDamage(){
+		$damage = $this->modifiers[self::MODIFIER_BASE];
+		foreach($this->rateModifiers as $type => $d){
+			$damage *= $d;
+		}
+		foreach($this->modifiers as $type => $d){
+			if($type !== self::MODIFIER_BASE){
+				$damage += $d;
+			}
+		}
+		return $damage;
+	}
+
+	/**
+	 * @return Item $usedArmors
+	 * notice: $usedArmors $index->$cost
+	 * $index: the $index of ArmorInventory
+	 * $cost:  the num of durability cost
+	 */
+	public function getUsedArmors(){
+		return $this->usedArmors;
+	}
+
+	/**
+	 * @return Int $fireProtectL
+	 */
+	public function getFireProtectL(){
+		return $this->fireProtectL;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function useArmors(){
+		if($this->entity instanceof Player){
+			if($this->entity->isSurvival() and $this->entity->isAlive()){
+				foreach($this->usedArmors as $index => $cost){
+					$i = $this->entity->getInventory()->getArmorItem($index);
+					if($i->isArmor()){
+						$this->entity->getInventory()->damageArmor($index, $cost);
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public function createThornsDamage(){
+		if($this->thornsLevel !== []){
+			$this->thornsArmor = array_rand($this->thornsLevel);
+			$thornsL = $this->thornsLevel[$this->thornsArmor];
+			if(mt_rand(1, 100) < $thornsL * 15){
+				//$this->thornsDamage = mt_rand(1, 4); 
+				$this->thornsDamage = 0; //Delete When #321 Is Fixed And Add In The Normal Damage
+			}
+		}
+	}
+
+	public function getThornsDamage(){
+		return $this->thornsDamage;
+	}
+
+	/**
+	 * @return bool should be used after getThornsDamage()
+	 */
+	public function setThornsArmorUse(){
+		if($this->thornsArmor === null){
+			return false;
+		}else{
+			$this->usedArmors[$this->thornsArmor] = 3;
+			return true;
+		}
 	}
 
 }
