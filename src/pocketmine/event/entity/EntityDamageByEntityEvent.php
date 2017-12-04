@@ -26,6 +26,7 @@ namespace pocketmine\event\entity;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
+use pocketmine\Server;
 
 /**
  * Called when an entity takes damage from another entity.
@@ -69,7 +70,7 @@ class EntityDamageByEntityEvent extends EntityDamageEvent{
 	 * @return Entity|null
 	 */
 	public function getDamager(){
-		return $this->getEntity()->getLevel()->getServer()->findEntity($this->damagerEntityId, $this->getEntity()->getLevel());
+		return Server::getInstance()->findEntity($this->damagerEntityId, $this->getEntity()->getLevel());
 	}
 
 	/**
