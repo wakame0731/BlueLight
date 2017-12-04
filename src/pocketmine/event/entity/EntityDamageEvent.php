@@ -133,7 +133,7 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 	 * @return float
 	 */
 	public function getFinalDamage() : float{
-		return array_sum($this->modifiers);
+		return round(array_sum($this->modifiers));
 	}
 
 }
