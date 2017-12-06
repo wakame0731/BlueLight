@@ -28,13 +28,12 @@ use pocketmine\Player;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 
-class Fireworks extends Creature{
+class Fireworks extends Projectile{
 
     const NETWORK_ID = 72;
 
     protected $gravity = 0;
     protected $drag = 0.01;
-    public $hadCollision = true;
     public $width = 0.25;
 	public $length = 0.25;
     public $height = 0.25;
@@ -62,18 +61,20 @@ class Fireworks extends Creature{
     }
 
     public function onUpdate(int $tick): bool{
-        if($this->lifetime-- === 5){
-            $pk = new EntityEventPacket;
-            $pk->entityRuntimeId = $this->getId();
-            $pk->event = 25;//EntityEventPacket::FIREWORK_BURN;
-            $this->getLevel()->getServer()->broadcastPacket($this->getLevel()->getPlayers(), $pk);
-            $this->getLevel()->broadcastLevelSoundEvent($this->asVector3(), 56);
+        if($this->lifetime-- === 0){
+            $pk2 = new EntityEventPacket();
+            $pk2->entityRuntimeId = $this->id;
+            $pk2->event = EntityEventPacket::FIREWORK_BURN;
+            $this->getLevel()->getServer()->broadcastPacket($this->getLevel()->getPlayers(), $pk2);
             $this->kill();
+            $this->getLevel()->broadcastLevelSoundEvent($this->asVector3(), 56);
             echo "Burn!";
             return false;
         }else{
+            /*
             $particle = new FlameParticle($this->getPosition());
             $this->getLevel()->addParticle($particle);
+            */
             return parent::onUpdate($tick);
         }
     }

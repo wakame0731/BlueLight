@@ -45,7 +45,7 @@ class Fireworks extends Item{
     
     public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{
 
-        $tags = $this->getCompoundTag();
+        $namedTag = $this->getNamedTag();
         $nbt = new CompoundTag("", [
             "Pos" => new ListTag("Pos", [
                     new DoubleTag("", $target->getX()),
@@ -65,11 +65,11 @@ class Fireworks extends Item{
             new CompoundTag("Fireworks", [
                 new ListTag("Explosions", [
                     new CompoundTag("", [
-                        new ByteArrayTag("FireworkColor", "2"),
-                        new ByteArrayTag("FireworkFade", "2"),
-                        new ByteTag("FireworkFlicker",0),
+                        new ByteArrayTag("FireworkColor", "4"),
+                        new ByteArrayTag("FireworkFade", "5"),
+                        new ByteTag("FireworkFlicker",1),
                         new ByteTag("FireworkTrail", 0),
-                        new ByteTag("FireworkType", 1),
+                        new ByteTag("FireworkType", 4),
                         
                     ]),
                 ]),
