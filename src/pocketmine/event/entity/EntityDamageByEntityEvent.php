@@ -26,7 +26,6 @@ use pocketmine\Server;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
-use pocketmine\Server;
 
 /**
  * Called when an entity takes damage from another entity.
