@@ -50,7 +50,7 @@ class Sugarcane extends Populator{
 			$tallRand = $random->nextRange(0, 17);
 			$yMax = $y + 2 + (int) ($tallRand > 10) + (int) ($tallRand > 15);
 			if($y !== -1){
-				for(; $y < 127 and $y < $yMax; $y++){
+				for(; $y < 255 and $y < $yMax; $y++){
 					if($this->canSugarcaneStay($x, $y, $z)){
 						$this->level->setBlockIdAt($x, $y, $z, Block::SUGARCANE_BLOCK);
 						$this->level->setBlockDataAt($x, $y, $z, 1);
@@ -74,7 +74,7 @@ class Sugarcane extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y >= 0; --$y){
+		for($y = 255; $y >= 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			if($b !== Block::AIR and $b !== Block::LEAVES and $b !== Block::LEAVES2){
 				break;

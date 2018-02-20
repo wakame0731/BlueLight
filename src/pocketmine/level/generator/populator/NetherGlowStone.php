@@ -45,7 +45,7 @@ class NetherGlowStone extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y >= 0; --$y){
+		for($y = 255; $y >= 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			if($b == 0){
 				break;

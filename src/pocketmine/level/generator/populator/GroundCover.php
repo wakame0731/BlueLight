@@ -43,12 +43,12 @@ class GroundCover extends Populator{
 					}
 
 					$column = $chunk->getBlockIdColumn($x, $z);
-					for($y = 127; $y > 0; --$y){
+					for($y = 256; $y > 0; --$y){
 						if($column{$y} !== "\x00" and !BlockFactory::get(ord($column{$y}))->isTransparent()){
 							break;
 						}
 					}
-					$startY = min(127, $y + $diffY);
+					$startY = min(256, $y + $diffY);
 					$endY = $startY - count($cover);
 					for($y = $startY; $y > $endY and $y >= 0; --$y){
 						$b = $cover[$startY - $y];

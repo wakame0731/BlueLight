@@ -79,7 +79,7 @@ class Setter extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y >= 0; --$y){
+		for($y = 255; $y >= 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			if(!is_array($this->block_data) or isset($this->block_data[$b])){
 				break;

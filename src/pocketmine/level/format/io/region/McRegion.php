@@ -213,7 +213,7 @@ class McRegion extends BaseLevelProvider{
 
 	public function getWorldHeight() : int{
 		//TODO: add world height options
-		return 128;
+		return 256;
 	}
 
 	public static function isValid(string $path) : bool{

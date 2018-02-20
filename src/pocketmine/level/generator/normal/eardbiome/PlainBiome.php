@@ -86,14 +86,14 @@ class PlainBiome extends GrassyBiome{
 		], [2 => true]);
 		$setter1->setBaseAmount(1);
 
-		$cave = new Cave2(45);
-		$cave->setBaseAmount(0);
+		//$cave = new Cave2(45);
+		//$cave->setBaseAmount(0);
 
-		$this->addPopulator($cave);
+		//$this->addPopulator($cave);
 
-		$this->addPopulator($setter1);
+		//$this->addPopulator($setter1);
 
-		$this->addPopulator($rock);
+		//$this->addPopulator($rock);
 		$this->addPopulator($trees1);
 		$this->addPopulator($trees2);
 		$this->addPopulator($sugarcane);
@@ -102,7 +102,7 @@ class PlainBiome extends GrassyBiome{
 		//$this->addPopulator($waterPit);
 		//$this->addPopulator($lilyPad);
 
-		$this->setElevation(40, 70);
+		$this->setElevation(35, 165);
 
 		$this->temperature = 0.8;
 		$this->rainfall = 0.4;

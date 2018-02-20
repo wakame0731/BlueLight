@@ -64,7 +64,7 @@ class Cave2 extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y > 0; --$y){
+		for($y = 255; $y > 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			$bl = Block::get($b);
 			if(($bl->isSolid() || $bl instanceof Liquid) && ($b !== Block::LEAVES && $b !== Block::LEAVES2 && $b !== Block::COBBLE && $b !== Block::OBSIDIAN && $b !== 159 && $b !== 99 && $b !== 100)){

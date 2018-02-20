@@ -47,7 +47,7 @@ class Eard extends Generator{
 	/** @var Random */
 	private $random;
 	/** @var int */
-	private $waterHeight = 50;
+	private $waterHeight = 96;
 	/** @var int */
 	private $bedrockDepth = 5;
 
@@ -115,6 +115,7 @@ class Eard extends Generator{
 		$this->noiseBase = new Simplex($this->random, 4, 1 / 4, 1 / 32);
 		$this->random->setSeed($this->level->getSeed());
 		$this->selector = new BiomeSelector($this->random, function($temperature, $rainfall){
+	return Biome::PLAINS;
 			if($rainfall < 0.25){
 				if($temperature < 0.65){
 					return Biome::OCEAN;
@@ -190,7 +191,7 @@ class Eard extends Generator{
 	public function generateChunk(int $chunkX, int $chunkZ){
 		$this->random->setSeed(0xdeadbeef ^ ($chunkX << 8) ^ $chunkZ ^ $this->level->getSeed());
 
-		$noise = Generator::getFastNoise3D($this->noiseBase, 16, 128, 16, 4, 8, 4, $chunkX * 16, 0, $chunkZ * 16);
+		$noise = Generator::getFastNoise3D($this->noiseBase, 16, 256, 16, 4, 8, 4, $chunkX * 16, 0, $chunkZ * 16);
 
 		$chunk = $this->level->getChunk($chunkX, $chunkZ);
 
@@ -233,7 +234,7 @@ class Eard extends Generator{
 
 				$smoothHeight = ($maxSum - $minSum) / 2;
 
-				for($y = 0; $y < 128; ++$y){
+				for($y = 0; $y < 256; ++$y){
 					if($y === 0){
 						$chunk->setBlockId($x, $y, $z, Block::BEDROCK);
 						continue;
@@ -270,7 +271,7 @@ class Eard extends Generator{
 	}
 
 	public function getSpawn() : Vector3{
-		return new Vector3(127.5, 128, 127.5);
+		return new Vector3(127.5, 256, 127.5);
 	}
 
 }

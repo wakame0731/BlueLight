@@ -69,7 +69,7 @@ class Vine extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y > 0; --$y){
+		for($y = 255; $y > 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			$b1 = $this->level->getBlockIdAt($x, $y-1, $z);
 			$bl = Block::get($b1);

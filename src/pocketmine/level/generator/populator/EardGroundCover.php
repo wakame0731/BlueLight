@@ -44,12 +44,12 @@ class EardGroundCover extends Populator{
 					}
 
 					$column = $chunk->getBlockIdColumn($x, $z);
-					for($y = 127; $y > 0; --$y){
+					for($y = 255; $y > 0; --$y){
 						if($column{$y} !== "\x00" and !BlockFactory::get(ord($column{$y}))->isTransparent()){
 							break;
 						}
 					}
-					$startY = min(127, $y + $diffY);
+					$startY = min(255, $y + $diffY);
 					$endY = $startY - count($cover);
 					for($y = $startY; $y > $endY and $y >= 0; --$y){
 						$b = $cover[$startY - $y];
@@ -63,7 +63,7 @@ class EardGroundCover extends Populator{
 							}else{
 								$chunk->setBlockId($x, $y, $z, Block::WATER);
 							}
-						}else if($b->getId() == Block::GRASS && $y < 50){
+						}else if($b->getId() == Block::GRASS && $y < 96){
 							$chunk->setBlockId($x, $y, $z, Block::DIRT);
 						}else if($b->getId() == Block::CONCRETE_POWDER && $y <= 50){
 							$chunk->setBlock($x, $y, $z, Block::CONCRETE, $b->getDamage());

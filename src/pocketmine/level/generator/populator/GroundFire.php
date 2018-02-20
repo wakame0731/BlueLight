@@ -60,7 +60,7 @@ class GroundFire extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 0; $y <= 127; ++$y){
+		for($y = 0; $y <= 255; ++$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			if($b == Block::AIR){
 				break;

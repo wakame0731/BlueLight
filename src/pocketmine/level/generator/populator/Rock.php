@@ -70,7 +70,7 @@ class Rock extends Populator{
 	}
 
 	private function getHighestWorkableBlock($x, $z){
-		for($y = 127; $y > 0; --$y){
+		for($y = 255; $y > 0; --$y){
 			$b = $this->level->getBlockIdAt($x, $y, $z);
 			$bl = Block::get($b);
 			if(((!$this->onLiquid && $bl->isSolid()) || ($this->onLiquid && $bl instanceof Liquid)) && ($b !== Block::LEAVES && $b !== Block::LEAVES2 && $b !== Block::COBBLE && $b !== 159 && $b !== 99 && $b !== 100)){
