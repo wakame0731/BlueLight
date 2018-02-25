@@ -36,7 +36,7 @@ class UltraBigTree extends Tree{
 
 	/** @var Random */
 	private $random;
-	private $trunkHeightMultiplier = 0.928;
+	private $trunkHeightMultiplier = 0.678;
 	private $trunkHeight;
 	private $leafAmount = 1.2;
 	private $leafDistanceLimit = 2;

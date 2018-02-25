@@ -65,7 +65,15 @@ abstract class Tree{
 					break;
 				case Sapling::OAK:
 				default:
-					$tree = new OakTree();
+					if(mt_rand(0, 10) === 1){
+						if(mt_rand(0, 15) === 2){
+							$tree = new UltraBigTree(Block::LOG, Block::LEAVES, Sapling::OAK, Sapling::OAK);
+						}else{
+							$tree = new BigTree(Block::LOG, Block::LEAVES, Sapling::OAK, Sapling::OAK);
+						}
+					}else{
+						$tree = new OakTree();
+					}
 					/*if($random->nextRange(0, 9) === 0){
 						$tree = new BigTree();
 					}else{*/
