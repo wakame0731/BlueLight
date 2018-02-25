@@ -24,10 +24,11 @@ namespace pocketmine\level\generator\normal\eardbiome;
 use pocketmine\block\Sapling;
 use pocketmine\level\generator\populator\TallGrass;
 use pocketmine\level\generator\populator\Tree;
-use pocketmine\level\generator\populator\BigTree;
+use pocketmine\level\generator\populator\UltraBigTree;
 use pocketmine\level\generator\populator\Setter;
 use pocketmine\level\generator\populator\Honeycomb;
 use pocketmine\level\generator\populator\Vine;
+use pocketmine\level\generator\populator\LilyPad;
 use pocketmine\block\Block;
 
 class ForestBiome extends GrassyBiome{
@@ -42,10 +43,10 @@ class ForestBiome extends GrassyBiome{
 
 		$this->type = $type;
 
-		$trees1_1 = new BigTree(Sapling::OAK, Sapling::OAK);
-		$trees1_1->setBaseAmount(1);
+		$trees1_1 = new UltraBigTree(Sapling::OAK, Sapling::OAK);
+		$trees1_1->setBaseAmount(2);
 		$this->addPopulator($trees1_1);
-		$trees1_2 = new Tree(Sapling::OAK);
+/*		$trees1_2 = new Tree(Sapling::OAK);
 		$trees1_2->setBaseAmount(3);
 		$this->addPopulator($trees1_2);
 		$trees2 = new Tree(Sapling::SPRUCE);
@@ -62,12 +63,17 @@ class ForestBiome extends GrassyBiome{
 		$this->addPopulator($trees4_1);
 		$trees4_2 = new Tree(Sapling::JUNGLE);
 		$trees4_2->setBaseAmount(1);
-		$this->addPopulator($trees4_2);
+		$this->addPopulator($trees4_2);*/
 
 		$tallGrass = new TallGrass();
 		$tallGrass->setBaseAmount(3);
 
 		$this->addPopulator($tallGrass);
+
+		$lilyPad = new LilyPad();
+		$lilyPad->setBaseAmount(5);
+
+		$this->addPopulator($lilyPad);
 
 		$setter1 = new Setter([[0, 0, 0, 39, 0]], [2 => true, 3 => true]);
 		$setter1->setBaseAmount(3);
@@ -78,7 +84,7 @@ class ForestBiome extends GrassyBiome{
 		$this->addPopulator($setter2);
 
 		$setter3 = new Setter([
-			[ 0, 1, 0, Block::RED_GLAZED_TERRACOTTA, 0],
+			[ 0, 1, 0, Block::GLOWSTONE, 0],
 			[ 0, 0, 1, Block::LEAVES, Sapling::JUNGLE],
 			[-1, 0, 0, Block::LEAVES, Sapling::JUNGLE], 
 			[ 0, 0, 0, Block::LOG, Sapling::JUNGLE], 
@@ -89,7 +95,7 @@ class ForestBiome extends GrassyBiome{
 		$this->addPopulator($setter3);
 		
 		$setter4 = new Setter([
-			[ 0, 2, 0, Block::LIME_GLAZED_TERRACOTTA, 0],
+			[ 0, 2, 0, Block::GLOWSTONE, 0],
 			[ 0, 1, 1, Block::LEAVES, Sapling::JUNGLE],
 			[-1, 1, 0, Block::LEAVES, Sapling::JUNGLE], 
 			[ 0, 1, 0, Block::LOG, Sapling::JUNGLE], 
@@ -100,7 +106,7 @@ class ForestBiome extends GrassyBiome{
 		$setter4->setBaseAmount(1);
 		$this->addPopulator($setter4);
 
-		$setter5 = new Setter([
+/*		$setter5 = new Setter([
 			[-1, 9, 0, Block::RED_MUSHROOM_BLOCK, 14],
 			[-1, 9, 1, Block::RED_MUSHROOM_BLOCK, 14],
 			[-1, 9,-1, Block::RED_MUSHROOM_BLOCK, 14],
@@ -220,9 +226,9 @@ class ForestBiome extends GrassyBiome{
 		$vine = new Vine();
 		$vine->setBaseAmount(7);
 
-		$this->addPopulator($vine);
+		$this->addPopulator($vine);*/
 
-		$this->setElevation(24, 110);
+		$this->setElevation(70, 130);
 
 		if($type === self::TYPE_BIRCH){
 			$this->temperature = 0.6;

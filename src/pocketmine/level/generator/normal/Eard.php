@@ -115,8 +115,7 @@ class Eard extends Generator{
 		$this->noiseBase = new Simplex($this->random, 4, 1 / 4, 1 / 32);
 		$this->random->setSeed($this->level->getSeed());
 		$this->selector = new BiomeSelector($this->random, function($temperature, $rainfall){
-	return Biome::PLAINS;
-			if($rainfall < 0.25){
+/*			if($rainfall < 0.25){
 				if($temperature < 0.65){
 					return Biome::OCEAN;
 				}elseif($temperature < 0.75){
@@ -152,6 +151,11 @@ class Eard extends Generator{
 				}else{
 					return Biome::RIVER;
 				}
+			}*/
+			if($rainfall < 0.5){
+				return Biome::PLAINS;
+			}else{
+				return Biome::FOREST;
 			}
 		}, Biome::getBiome(Biome::OCEAN));
 
