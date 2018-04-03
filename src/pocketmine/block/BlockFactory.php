@@ -25,6 +25,7 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\level\Position;
+use pocketmine\utils\MainLogger; 
 
 /**
  * Manages block registration and instance creation
@@ -49,8 +50,15 @@ class BlockFactory{
 	public static $diffusesSkyLight = null;
 	/** @var \SplFixedArray<float> */
 	public static $blastResistance = null;
-
 	/**
+	 * @var int[] 
+	 */ 
+   	public static $staticRuntimeIdMap = []; 
+  
+   	/** @var int[] */ 
+   	public static $legacyIdMap = []; 
+  
+   	/** 
 	 * Initializes the block factory. By default this is called only once on server start, however you may wish to use
 	 * this if you need to reset the block factory back to its original defaults for whatever reason.
 	 *
@@ -326,6 +334,13 @@ class BlockFactory{
 				}
 			}
 		}
+
+	    $runtimeIdMap = json_decode(file_get_contents(\pocketmine\PATH . "src/pocketmine/resources/runtimeid_table.json"), true); 
+    	foreach($runtimeIdMap as $obj){ 
+    		self::$staticRuntimeIdMap[$obj["id"] << 4 | $obj["data"]] = $obj["runtimeID"]; 
+		}
+		
+    	self::$legacyIdMap = array_flip(self::$staticRuntimeIdMap);
 	}
 
 	/**
@@ -416,5 +431,42 @@ class BlockFactory{
 	public static function isRegistered(int $id) : bool{
 		$b = self::$list[$id];
 		return $b !== null and !($b instanceof UnknownBlock);
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @param int $id
+	 * @param int $meta
+	 *
+	 * @return int
+	 */
+	public static function toStaticRuntimeId(int $id, int $meta = 0) : int{
+		$index = ($id << 4) | $meta;
+		if(!isset(self::$staticRuntimeIdMap[$index])){
+			self::registerMapping($rtId = ++self::$lastRuntimeId, $id, $meta);
+			MainLogger::getLogger()->error("ID $id meta $meta does not have a corresponding block static runtime ID, added a new unknown runtime ID ($rtId)");
+			return $rtId;
+		}
+
+		return self::$staticRuntimeIdMap[$index];
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @param int $runtimeId
+	 *
+	 * @return int[] [id, meta]
+	 */
+	public static function fromStaticRuntimeId(int $runtimeId) : array{
+		$v = self::$legacyIdMap[$runtimeId];
+		return [$v >> 4, $v & 0xf];
+	}
+
+	private static function registerMapping(int $staticRuntimeId, int $legacyId, int $legacyMeta) : void{
+		self::$staticRuntimeIdMap[($legacyId << 4) | $legacyMeta] = $staticRuntimeId;
+		self::$legacyIdMap[$staticRuntimeId] = ($legacyId << 4) | $legacyMeta;
+		self::$lastRuntimeId = max(self::$lastRuntimeId, $staticRuntimeId);
 	}
 }

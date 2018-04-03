@@ -864,13 +864,15 @@ class Level implements ChunkManager, Metadatable{
 				$pk->z = $b->z;
 
 				if($b instanceof Block){
-					$pk->blockId = $b->getId();
-					$pk->blockData = $b->getDamage();
+					$blockId = $b->getId(); 
+          			$blockData = $b->getDamage(); 
 				}else{
 					$fullBlock = $this->getFullBlock($b->x, $b->y, $b->z);
-					$pk->blockId = $fullBlock >> 4;
-					$pk->blockData = $fullBlock & 0xf;
+					$blockId = $fullBlock >> 4; 
+          			$blockData = $fullBlock & 0xf; 
 				}
+
+				$pk->blockRuntimeId = BlockFactory::toStaticRuntimeId($blockId, $blockData); 
 
 				$pk->flags = $first ? $flags : UpdateBlockPacket::FLAG_NONE;
 
@@ -888,14 +890,16 @@ class Level implements ChunkManager, Metadatable{
 				$pk->z = $b->z;
 
 				if($b instanceof Block){
-					$pk->blockId = $b->getId();
-					$pk->blockData = $b->getDamage();
+					$blockId = $b->getId(); 
+          			$blockData = $b->getDamage(); 
 				}else{
 					$fullBlock = $this->getFullBlock($b->x, $b->y, $b->z);
-					$pk->blockId = $fullBlock >> 4;
-					$pk->blockData = $fullBlock & 0xf;
+					$blockId = $fullBlock >> 4; 
+         			 $blockData = $fullBlock & 0xf; 
 				}
 
+				$pk->blockRuntimeId = BlockFactory::toStaticRuntimeId($blockId, $blockData); 
+				
 				$pk->flags = $flags;
 
 				$packets[] = $pk;
@@ -1844,7 +1848,7 @@ class Level implements ChunkManager, Metadatable{
 		}
 
 		if($playSound){
-			$this->broadcastLevelSoundEvent($hand, LevelSoundEventPacket::SOUND_PLACE, 1, $hand->getId());
+			$this->broadcastLevelSoundEvent($hand, LevelSoundEventPacket::SOUND_PLACE, 1, BlockFactory::toStaticRuntimeId($hand->getId(), $hand->getDamage())); 
 		}
 
 		$item->setCount($item->getCount() - 1);

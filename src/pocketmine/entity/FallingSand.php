@@ -67,7 +67,7 @@ class FallingSand extends Entity{
 			return;
 		}
 
-		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_INT, $this->getBlock() | ($this->getDamage() << 8));
+		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_INT, BlockFactory::toStaticRuntimeId($this->block->getId(), $this->block->getDamage()));
 	}
 
 	public function canCollideWith(Entity $entity) : bool{
