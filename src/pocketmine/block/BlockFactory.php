@@ -472,9 +472,4 @@ class BlockFactory{
 		self::$lastRuntimeId = max(self::$lastRuntimeId, $staticRuntimeId);
 	}
 
-	private static function registerMapping(int $staticRuntimeId, int $legacyId, int $legacyMeta) : void{ 
-		self::$staticRuntimeIdMap[($legacyId << 4) | $legacyMeta] = $staticRuntimeId; 
-		self::$legacyIdMap[$staticRuntimeId] = ($legacyId << 4) | $legacyMeta; 
-		self::$lastRuntimeId = max(self::$lastRuntimeId, $staticRuntimeId); 
-	} 
 }
