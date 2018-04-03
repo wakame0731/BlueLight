@@ -56,8 +56,11 @@ class BlockFactory{
    	public static $staticRuntimeIdMap = []; 
   
    	/** @var int[] */ 
-   	public static $legacyIdMap = []; 
-  
+	public static $legacyIdMap = []; 
+	
+    /** @var int */ 
+	private static $lastRuntimeId = 0; 
+ 
    	/** 
 	 * Initializes the block factory. By default this is called only once on server start, however you may wish to use
 	 * this if you need to reset the block factory back to its original defaults for whatever reason.
@@ -335,12 +338,11 @@ class BlockFactory{
 			}
 		}
 
+		/** @var mixed[] $runtimeIdMap */ 
 	    $runtimeIdMap = json_decode(file_get_contents(\pocketmine\PATH . "src/pocketmine/resources/runtimeid_table.json"), true); 
     	foreach($runtimeIdMap as $obj){ 
-    		self::$staticRuntimeIdMap[$obj["id"] << 4 | $obj["data"]] = $obj["runtimeID"]; 
+    		self::registerMapping($obj["runtimeID"], $obj["id"], $obj["data"]); 
 		}
-		
-    	self::$legacyIdMap = array_flip(self::$staticRuntimeIdMap);
 	}
 
 	/**
@@ -444,9 +446,9 @@ class BlockFactory{
 	public static function toStaticRuntimeId(int $id, int $meta = 0) : int{
 		$index = ($id << 4) | $meta;
 		if(!isset(self::$staticRuntimeIdMap[$index])){
-			self::registerMapping($rtId = ++self::$lastRuntimeId, $id, $meta);
-			MainLogger::getLogger()->error("ID $id meta $meta does not have a corresponding block static runtime ID, added a new unknown runtime ID ($rtId)");
-			return $rtId;
+			self::registerMapping($rtId = ++self::$lastRuntimeId, $id, $meta); 
+      		MainLogger::getLogger()->error("ID $id meta $meta does not have a corresponding block static runtime ID, added a new unknown runtime ID ($rtId)"); 
+	  		return $rtId; 
 		}
 
 		return self::$staticRuntimeIdMap[$index];
@@ -469,4 +471,10 @@ class BlockFactory{
 		self::$legacyIdMap[$staticRuntimeId] = ($legacyId << 4) | $legacyMeta;
 		self::$lastRuntimeId = max(self::$lastRuntimeId, $staticRuntimeId);
 	}
+
+	private static function registerMapping(int $staticRuntimeId, int $legacyId, int $legacyMeta) : void{ 
+		self::$staticRuntimeIdMap[($legacyId << 4) | $legacyMeta] = $staticRuntimeId; 
+		self::$legacyIdMap[$staticRuntimeId] = ($legacyId << 4) | $legacyMeta; 
+		self::$lastRuntimeId = max(self::$lastRuntimeId, $staticRuntimeId); 
+	} 
 }
