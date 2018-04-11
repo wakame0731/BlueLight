@@ -1,4 +1,6 @@
-﻿![BlueLight](https://github.com/BlueLightJapan/BlueLight/blob/master/logo.jpg)</br>
+# I will NOT do renewal work, and I do NOT know why they think I'll do so.
+
+![BlueLight](https://github.com/BlueLightJapan/BlueLight/blob/master/logo.jpg)</br>
 
 # BlueLight for 1.2.0
 ## Select Language: [English](#ENG) [日本語](#JPN)
